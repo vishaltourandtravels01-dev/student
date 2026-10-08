@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QR se Print — Scan • Upload • Pay • Print</title>
+<style>
+:root{--navy:#082b66;--blue:#0b56c7;--sky:#eaf3ff;--pink:#f21b6b;--yellow:#ffd51a;--ink:#17233d;--muted:#667085;--white:#fff;--line:#d9e2ef;--green:#159447}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans Devanagari","Mangal",Arial,sans-serif;background:#f5f8fc;color:var(--ink)}
+.wrap{max-width:1050px;margin:auto;padding:16px}.hero{background:linear-gradient(135deg,#fff 0,#f5f9ff 58%,#e8f2ff 100%);border:2px solid var(--navy);border-radius:22px;overflow:hidden;box-shadow:0 8px 28px #082b6618}
+.brand{padding:20px 22px 10px;text-align:center}.logo{display:inline-flex;align-items:center;gap:10px;font-family:Arial,sans-serif;font-weight:900;font-size:clamp(30px,6vw,54px);letter-spacing:-2px;color:#071e52}.logo .qr{font-weight:1000}.logo .se{font-size:.65em;color:#1e1e1e;letter-spacing:0}.logo .print{color:#0b56c7}.printer{font-size:.7em}.tag{display:inline-block;margin-top:6px;background:var(--navy);color:#fff;padding:8px 20px;border-radius:8px;font-family:Arial,sans-serif;font-weight:900;letter-spacing:1px;font-size:14px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px 18px 20px}.step{background:#fff;border:2px solid var(--navy);border-radius:14px;padding:12px;text-align:center;min-height:116px;position:relative}.step:not(:last-child):after{content:'➜';position:absolute;right:-19px;top:42px;background:var(--yellow);border-radius:50%;width:32px;height:32px;line-height:32px;color:#071e52;font-weight:900;z-index:2}.num{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--yellow);font:bold 18px Arial;color:#071e52}.step b{display:block;font-size:17px;margin-top:5px}.step span{font-size:12px;color:#556070}
+.banner{margin:0 18px 18px;background:var(--navy);color:#fff;border-radius:12px;padding:11px 15px;text-align:center;font-weight:800}.banner strong{color:var(--yellow)}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 3px 15px #0b23400b}.card h2{margin:0 0 14px;font-size:21px;color:var(--navy)}.sub{color:var(--muted);font-size:13px;margin-top:-7px;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}label{font-weight:800;display:block;margin:5px 0 7px}input,select,button{font:inherit;width:100%;padding:12px;border:1px solid #cbd6e5;border-radius:10px;background:#fff}input:focus,select:focus{outline:2px solid #b9d3ff;border-color:var(--blue)}button{cursor:pointer;font-weight:900}.primary{background:var(--blue);color:#fff;border:0}.green{background:var(--green);color:#fff;border:0}.red{background:#d92d3d;color:#fff;border:0}.blue{background:var(--navy);color:#fff;border:0}.preview{max-width:100%;max-height:260px;border:1px solid var(--line);border-radius:10px;margin-top:8px}.filepreview{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#f8fafc}.filepreview img{display:block;max-width:100%;max-height:260px;margin:auto;border-radius:8px}.paperpreview{position:relative;width:min(100%,520px);margin:10px auto 0;background:#fff;border:1px solid #b9c4d0;box-shadow:0 2px 8px #0001;overflow:hidden}.paperpreview.a4{aspect-ratio:210/297}.paperpreview.p46{aspect-ratio:4/6}.paperpreview .paperimg{position:absolute;left:0;width:100%;height:auto;max-width:100%;object-fit:contain;object-position:center top;display:block}.paperpreview .paper-top-gap{position:absolute;left:0;right:0;top:0;height:0;border-top:2px solid transparent;z-index:2;pointer-events:none}.papercaption{font-size:12px;color:#667085;margin-top:5px;text-align:center}.filepreview iframe,.filepreview embed{display:block;width:100%;height:360px;border:0;border-radius:8px;background:#fff}.previewlabel{font-weight:800;margin-bottom:7px;color:var(--navy)}.croparea canvas{display:block;max-width:100%;height:auto;margin:0 auto;touch-action:none}.pill{display:inline-block;padding:7px 10px;background:#edf4ff;border:1px solid #cfe0ff;border-radius:20px;margin:5px 4px 0 0;font-size:13px}.small{font-size:12px;color:var(--muted)}.success{padding:12px;border-radius:10px;background:#eaf8f0;color:#116b36;border:1px solid #bfe8ce}.pricebox{font-size:24px;font-weight:900;color:var(--pink)}
+.idbox{border:2px dashed var(--blue);background:#f8fbff;padding:14px;border-radius:14px;margin-top:14px}.idtitle{font-weight:900;color:var(--navy);font-size:18px}.hide{display:none!important}.row{display:flex;gap:10px}.row>*{flex:1}.modal{position:fixed;inset:0;background:#07142bb8;display:flex;align-items:center;justify-content:center;padding:14px;z-index:20}.modalbox{background:#fff;border-radius:18px;max-width:900px;width:100%;max-height:92vh;overflow:auto;padding:18px}.croparea{background:#0d1830;padding:10px;text-align:center;border-radius:12px;overflow:auto}.touchcrop{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:220px}.croparea canvas{background:#fff;display:block;max-width:100%;max-height:58vh;width:auto;height:auto;object-fit:contain}.croparea{max-height:68vh}.croparea img{max-width:100%;max-height:430px;object-fit:contain}.note{background:#fff8dc;border:1px solid #ffe07a;border-radius:10px;padding:10px;font-size:13px}.footer{text-align:center;color:#667085;font-size:12px;padding:12px}
+@media(max-width:700px){.steps{grid-template-columns:1fr}.step:not(:last-child):after{content:'⬇';right:calc(50% - 16px);top:auto;bottom:-20px}.step{min-height:auto}.logo{font-size:35px}.wrap{padding:9px}}
+
+.doc-editor{position:fixed;inset:0;background:#07142bcc;z-index:40;display:flex;align-items:center;justify-content:center;padding:10px}.doc-editor-box{background:#fff;width:min(980px,100%);height:min(94vh,900px);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}.doc-toolbar{display:flex;gap:7px;overflow:auto;padding:9px;background:#f4f7fb;border-bottom:1px solid #d8e0eb;flex-wrap:wrap}.doc-toolbar button{width:auto;white-space:nowrap;padding:9px 11px;font-size:13px}.doc-work{flex:1;overflow:auto;background:#202a3d;padding:14px;text-align:center}.doc-stage{position:relative;display:inline-block;background:#fff;box-shadow:0 4px 18px #0005;max-width:100%}.doc-stage canvas{display:block;max-width:100%;height:auto}.doc-pdf{width:min(820px,100%);height:72vh;border:0;background:#fff}.doc-footer{padding:9px;border-top:1px solid #d8e0eb;display:flex;gap:8px}.doc-footer button{flex:1}.filter-menu{display:flex;gap:7px;overflow:auto;padding:8px;background:#fff;border-bottom:1px solid #e5e7eb}.filter-menu button{width:auto;min-width:86px;padding:8px;font-size:12px}.signature-pad{width:100%;height:180px;border:1px dashed #98a2b3;background:#fff;touch-action:none}.doc-note{font-size:12px;color:#667085;padding:7px 10px;background:#fff8dc;border-bottom:1px solid #f0df91}.erase-cursor{cursor:crosshair}.doc-small{font-size:12px;color:#667085}.scanner-settings-strip{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;padding:9px;background:#f4f7fb;border:1px solid #d8e0eb;border-radius:10px}.scanner-settings-strip span{display:inline-flex;align-items:center;padding:7px 9px;border-radius:18px;background:#fff;border:1px solid #cbd6e5;font-size:12px;font-weight:800;color:var(--navy)}
+
+/* ===== v15 PRO 6-STEP WIZARD UI — visual/navigation layer only ===== */
+.step-kicker{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;background:#eef0ff;color:#4f46e5;font-size:11px;font-weight:900;letter-spacing:.08em;margin-bottom:8px}
+.wizard-step-card{display:none!important}.wizard-step-card.active{display:block!important;animation:stepIn .28s ease}
+@keyframes stepIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.wizard-actions{display:flex;gap:12px;margin-top:18px}.payment-next-only{justify-content:flex-end}.payment-next-only .nextBtn{max-width:360px}.wizard-actions button{min-height:50px}.backBtn{background:#fff!important;color:#344054!important;border:1px solid #d8deea!important}.nextBtn{flex:1}.order-submit{min-height:56px;border-radius:16px!important}
+.wizard-progress{grid-template-columns:repeat(6,1fr)!important;padding:16px 20px 22px!important}.wizard-progress .step{min-height:110px;cursor:pointer;opacity:.62;transition:.2s}.wizard-progress .step.active{opacity:1;border-color:#7c6cff;box-shadow:0 12px 28px rgba(91,95,240,.15);transform:translateY(-2px)}.wizard-progress .step.done{opacity:1;background:linear-gradient(145deg,#f3fff9,#fff)}.wizard-progress .step.done .num{background:linear-gradient(135deg,#16a36a,#25c6da);color:#fff}.wizard-progress .step:not(:last-child):after{content:'›';font-size:23px;line-height:31px}
+.review-box{display:grid;gap:10px}.review-item{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 16px;border:1px solid #e3e7f2;border-radius:15px;background:linear-gradient(135deg,#fbfcff,#f7f8ff)}.review-item span:first-child{color:#667085;font-size:13px}.review-item b{color:#17213c;text-align:right}.final-order-box{display:flex;gap:14px;align-items:center;padding:18px;border-radius:18px;background:linear-gradient(135deg,#effaf6,#eef8ff);border:1px solid #cbeee0}.final-order-box>span{font-size:30px}.final-order-box b{display:block;font-size:17px}.final-order-box small{display:block;color:#667085;margin-top:3px}
+.payment-choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.payment-choice{display:flex!important;align-items:center;gap:10px;padding:15px!important;border:1px solid #e1e5f0;border-radius:16px;background:#fff;cursor:pointer;box-shadow:0 5px 18px rgba(30,41,80,.05)}.payment-choice span{font-size:24px}.payment-choice div{flex:1}.payment-choice b{display:block}.payment-choice small{display:block;color:#667085;margin-top:3px;font-weight:500}.payment-choice input{width:auto;box-shadow:none}
+@media(max-width:850px){.wizard-progress{grid-template-columns:repeat(3,1fr)!important}.wizard-progress .step:not(:last-child):after{content:''}.payment-choice-grid{grid-template-columns:1fr}.wizard-progress .step{min-height:90px}}
+@media(max-width:600px){.wizard-progress{grid-template-columns:repeat(2,1fr)!important;padding:12px!important}.wizard-progress .step{min-height:84px;padding:10px}.wizard-progress .step b{font-size:14px}.wizard-progress .step span:not(.num){font-size:10px}.wizard-actions{gap:8px}.wizard-actions button{min-height:48px}}
+
+/* ===== FINAL30 v15 UI ONLY — styling layer; functionality untouched ===== */
+:root{
+  --navy:#101b4d;--blue:#5b5ff0;--sky:#eef1ff;--pink:#ff4f9a;--yellow:#ffd166;
+  --ink:#17213c;--muted:#68738a;--white:#fff;--line:#e2e7f2;--green:#16a36a;
+  --violet:#7c4dff;--cyan:#25c6da;--orange:#ff8a3d;
+}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(circle at 8% 2%,rgba(124,77,255,.14),transparent 28%),
+    radial-gradient(circle at 92% 8%,rgba(37,198,218,.14),transparent 25%),
+    linear-gradient(135deg,#f8faff 0%,#f1f4ff 48%,#f7fbff 100%);
+  color:var(--ink);
+}
+.wrap{max-width:1120px;padding:18px}
+.hero{
+  border:1px solid rgba(91,95,240,.25);border-radius:30px;
+  background:linear-gradient(135deg,rgba(255,255,255,.97),rgba(243,245,255,.96));
+  box-shadow:0 20px 60px rgba(43,53,120,.13),0 2px 10px rgba(24,31,67,.06);
+}
+.brand{padding:25px 22px 13px}
+.logo{
+  color:#151d52;text-shadow:0 4px 20px rgba(91,95,240,.16);
+  letter-spacing:-2.5px
+}
+.logo .print{color:var(--violet)}
+.tag{
+  background:linear-gradient(90deg,#4f46e5,#7c4dff,#08a9c5);
+  border-radius:999px;padding:9px 20px;box-shadow:0 8px 18px rgba(92,77,230,.2)
+}
+.steps{padding:14px 20px 22px;gap:14px}
+.step{
+  border:1px solid rgba(91,95,240,.16);border-radius:20px;
+  background:linear-gradient(145deg,#fff,#f7f8ff);
+  box-shadow:0 10px 26px rgba(42,51,112,.08);
+  transition:transform .2s ease,box-shadow .2s ease
+}
+.step:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(42,51,112,.13)}
+.step:not(:last-child):after{
+  background:linear-gradient(135deg,#ffd166,#ff9f43);color:#25204c;
+  box-shadow:0 5px 12px rgba(255,159,67,.25)
+}
+.num{background:linear-gradient(135deg,#ffd166,#ff9f43);box-shadow:0 5px 12px rgba(255,159,67,.25)}
+.banner{
+  margin:0 20px 20px;border:0!important;border-radius:18px!important;
+  background:linear-gradient(100deg,#151d52,#4f46e5 48%,#08a9c5)!important;
+  box-shadow:0 12px 25px rgba(55,62,145,.18)
+}
+.card{
+  border:1px solid rgba(91,95,240,.14)!important;border-radius:20px!important;
+  background:rgba(255,255,255,.95)!important;
+  box-shadow:0 12px 34px rgba(42,51,112,.08)!important;
+  transition:box-shadow .2s ease,transform .2s ease
+}
+.card:hover{box-shadow:0 18px 42px rgba(42,51,112,.12)!important}
+input,select,button{
+  border:1px solid #dfe4f0;border-radius:13px;
+  box-shadow:0 2px 7px rgba(30,41,80,.035);transition:border-color .18s,box-shadow .18s,transform .12s
+}
+input:focus,select:focus{
+  outline:none;border-color:#7c6cff;box-shadow:0 0 0 4px rgba(124,77,255,.11)
+}
+button:hover{transform:translateY(-1px)}
+.primary{background:linear-gradient(135deg,#4f46e5,#7c4dff)!important;box-shadow:0 8px 18px rgba(92,77,230,.2)}
+.green{background:linear-gradient(135deg,#0f9f68,#21bd83)!important}
+.red{background:linear-gradient(135deg,#e23d63,#ff5278)!important}
+.blue{background:linear-gradient(135deg,#18235b,#3949ab)!important}
+.preview,.filepreview,.idbox,.note,.success{
+  border-radius:16px!important
+}
+.filepreview{
+  background:linear-gradient(145deg,#fafbff,#f2f5ff)!important;
+  box-shadow:inset 0 1px 0 #fff,0 8px 20px rgba(41,51,100,.05)
+}
+.idbox{
+  border:1px dashed #746cff!important;
+  background:linear-gradient(145deg,#f7f5ff,#f1fbff)!important
+}
+.pill{
+  background:linear-gradient(90deg,#eef0ff,#eafaff);border-color:#d7dafa
+}
+.pricebox{color:#e43d8b;text-shadow:0 4px 16px rgba(228,61,139,.15)}
+.modal{background:rgba(8,13,38,.72);backdrop-filter:blur(7px)}
+.modalbox{
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:0 24px 80px rgba(0,0,0,.25)
+}
+.croparea{background:linear-gradient(145deg,#111936,#252d55)}
+.doc-editor{backdrop-filter:blur(6px)}
+.doc-editor-box{
+  border:1px solid rgba(255,255,255,.5);
+  box-shadow:0 25px 90px rgba(0,0,0,.3)
+}
+.doc-toolbar{
+  background:linear-gradient(90deg,#f8f9ff,#eef1ff)!important;
+  border-bottom:1px solid #dde2f0!important
+}
+.filter-menu{
+  background:linear-gradient(90deg,#fff,#f6f8ff)!important
+}
+.filter-menu button{
+  border:1px solid #dfe3ef!important;border-radius:999px!important;
+  background:#fff!important;box-shadow:0 3px 9px rgba(40,50,100,.06)
+}
+.scanner-settings-strip{
+  background:linear-gradient(90deg,#f7f8ff,#f2fbff)!important;
+  border-color:#dce2f0!important
+}
+.wizard-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;padding-top:18px;border-top:1px solid #e8ebf5}.wizard-actions>button,.wizard-actions>span{width:170px;min-width:170px;height:52px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}.wizard-actions>span{visibility:hidden}.wizard-actions button{font-weight:800;font-size:15px;cursor:pointer;position:relative;overflow:hidden}.wizard-actions button::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 25%,rgba(255,255,255,.38) 50%,transparent 75%);transform:translateX(-130%);transition:transform .55s ease}.wizard-actions button:hover::after{transform:translateX(130%)}.wizard-actions button:active{transform:scale(.97)}.wizard-actions .backBtn{background:linear-gradient(135deg,#eef1f8,#e2e7f2)!important;color:#27304a!important;border-color:#d4dbe8!important;box-shadow:0 8px 18px rgba(42,51,112,.09)}.wizard-actions .nextBtn,.wizard-actions .order-submit{border:0!important;box-shadow:0 10px 24px rgba(79,70,229,.22)}.wizard-step-card.active{animation:wizardIn .38s cubic-bezier(.2,.8,.2,1)}@keyframes wizardIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}.wizard-actions button{animation:buttonPop .32s ease both}@keyframes buttonPop{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.footer{color:#7a8498}
+@media(max-width:700px){
+  .wrap{padding:8px}.hero{border-radius:22px}.brand{padding-top:19px}
+  .steps{padding:10px 12px 18px}.banner{margin:0 12px 14px}
+  .card{border-radius:17px!important}
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+  <div class="brand"><div class="logo"><span class="qr">QR</span><span class="se">se</span><span class="print">Print 🖨️</span></div><div class="tag">SCAN • UPLOAD • PAY • PRINT</div></div>
+  <div class="steps wizard-progress" id="wizardProgress">
+    <div class="step active"><span class="num">1</span><b>फाइल चुनें</b><span>Photo / PDF चुनें</span></div>
+    <div class="step"><span class="num">2</span><b>प्रिंट सेटिंग</b><span>पेपर और कॉपी चुनें</span></div>
+    <div class="step"><span class="num">3</span><b>जानकारी</b><span>नाम और मोबाइल दें</span></div>
+    <div class="step"><span class="num">4</span><b>रिव्यू</b><span>सब कुछ चेक करें</span></div>
+    <div class="step"><span class="num">5</span><b>पेमेंट</b><span>भुगतान विकल्प चुनें</span></div>
+    <div class="step"><span class="num">6</span><b>ऑर्डर भेजें</b><span>प्रिंट ऑर्डर पूरा करें</span></div>
+  </div>
+  <div class="banner">💳 <strong>Online Payment</strong> या 💵 <strong>Cash Payment</strong> — दोनों विकल्प उपलब्ध</div>
+</section>
+
+<div class="card wizard-step-card" id="step1">
+  <div class="step-kicker">STEP 1 OF 6</div><h2>📤 1. अपनी फाइल चुनें</h2>
+  <div class="sub">फोटो चुनते ही पहले <b>Crop / Resize</b> करने का विकल्प मिलेगा। उसके बाद ही फोटो ऑर्डर में जुड़ेगी।</div>
+  <div class="grid">
+    <div><label>📂 Photo / PDF चुनें</label><input id="files" type="file" accept="image/*,application/pdf,.pdf" multiple><div class="small" style="margin-top:5px">मोबाइल पर Gallery/File Picker खुलेगा। Photo या PDF चुनें → Document Scanner Editor खुलेगा।</div><div id="filelist"></div><div id="selectedPreview" class="filepreview hide"></div></div>
+    <div><label>आपको क्या प्रिंट करना है?</label><select id="type"><option value="document">📄 सामान्य दस्तावेज़ / PDF</option><option value="passport">📸 पासपोर्ट फोटो</option><option value="multi">🖼️ एक पेज पर कई फोटो</option><option value="id">🪪 ID / Aadhaar Front + Back</option><option value="pan">💳 PAN Card / Identity Card</option></select><div class="small" style="margin-top:6px">📑 इस dropdown में कोई भी print type चुनें — उसके Photo/PDF पर पहले यही Document Scanner Editor खुलेगा। सभी print types में <b>✂️ Crop / 4-Corner Crop, ↻ Rotate, 🎨 Color Filter, 🧽 Eraser, ✍️ Signature और 💧 Watermark</b> उपलब्ध रहेंगे। <b>📸 पासपोर्ट फोटो</b> चुनने पर edited photo से A4 पर 6 passport-size photos का layout अपने-आप बनेगा।</div>
+    <div class="scanner-settings-strip" id="typeSettingsStrip">
+      <span>✂️ Crop / 4-Corner</span><span>↻ Rotate</span><span>🎨 Color Filter</span><span>🧽 Eraser</span><span>✍️ Signature</span><span>💧 Watermark</span>
+    </div></div>
+  </div>
+  <div id="idbox" class="idbox hide">
+    <div class="idtitle">🪪 ID / Aadhaar — Front और Back एक ही पेज पर</div>
+    <div class="small">पहले Front फोटो चुनें → Crop/Resize करें → फिर Back फोटो चुनें → Crop/Resize करें। अंत में दोनों को एक A4 पेज पर <b>वास्तविक Aadhaar आकार (85.60 × 53.98 mm)</b> में लगाया जाएगा। Print में 100% / Actual Size रखें।</div>
+    <div class="grid" style="margin-top:10px"><div><label>Front (सामने वाला भाग)</label><input id="front" type="file" accept="image/*"><div id="frontStatus" class="small"></div><img id="frontPreview" class="preview hide" alt="Front preview"></div><div><label>Back (पीछे वाला भाग)</label><input id="back" type="file" accept="image/*"><div id="backStatus" class="small"></div><img id="backPreview" class="preview hide" alt="Back preview"></div></div>
+    <button id="makeid" class="blue" style="margin-top:10px">🪪 Front + Back को A4 पर Actual Aadhaar Size में तैयार करें</button><img id="idprev" class="preview hide">
+  </div>
+</div>
+<div id="panbox" class="idbox hide">
+  <div class="idtitle">💳 PAN Card / Identity Card — A4 पर Actual Card Size</div>
+  <div class="small">Photo चुनें → Document Scanner Editor में Crop/4-Corner, Rotate, Color Filter, Eraser, Signature और Watermark लगाएँ → फिर A4 पर 85.60 × 53.98 mm actual card size में automatically तैयार होगा।</div>
+  <div style="margin-top:10px"><label>💳 PAN / Identity Card Photo चुनें</label><input id="panfile" type="file" accept="image/*"><div id="panStatus" class="small"></div><img id="panPreview" class="preview hide" alt="PAN / Identity Card preview"></div>
+</div>
+  <div class="wizard-actions"><span></span><button type="button" class="nextBtn primary" data-next="2">आगे बढ़ें →</button></div>
+</div>
+
+<div class="card wizard-step-card" id="step2">
+  <div class="step-kicker">STEP 2 OF 6</div><h2>🖨️ 2. प्रिंट की सेटिंग चुनें</h2>
+  <div class="grid">
+    <div><label>रंग</label><select id="mode"><option value="BW">🖤 Black & White</option><option value="COLOR">🌈 Color</option></select></div>
+    <div><label>कितनी कॉपी?</label><input id="copies" type="number" min="1" value="1"></div>
+    <div><label>पेपर / साइज</label><select id="paper"><option>A4</option><option>4x6</option><option>5x7</option><option>A5</option><option>LETTER</option><option>PHOTO</option></select><div class="small" style="margin-top:5px">📌 सामान्य Document (PDF/JPG/PNG): चुने हुए पेपर पर size ऊपर से शुरू होगा; छोटा document बीच में नहीं आएगा।</div></div>
+    <div><label>प्रिंट का तरीका</label><select id="sides"><option value="SINGLE">➡️ एक तरफ</option><option value="DUPLEX">↔️ दोनों तरफ</option></select></div>
+  </div>
+  <div class="wizard-actions"><button type="button" class="backBtn" data-back="1">← वापस</button><button type="button" class="nextBtn primary" data-next="3">आगे बढ़ें →</button></div>
+</div>
+
+<div class="card wizard-step-card" id="step3">
+  <div class="step-kicker">STEP 3 OF 6</div><h2>👤 3. अपनी जानकारी दें</h2>
+  <div class="grid">
+    <div><label>नाम</label><input id="name" placeholder="अपना नाम लिखें"></div>
+    <div><label>मोबाइल नंबर</label><input id="phone" placeholder="10 अंकों का मोबाइल नंबर"></div>
+
+  </div>
+  <div class="note" style="margin-top:12px">🔔 <b>ध्यान दें:</b> आपकी जानकारी सुरक्षित रूप से ऑर्डर के साथ भेजी जाएगी।</div>
+  <div class="wizard-actions"><button type="button" class="backBtn" data-back="2">← वापस</button><button type="button" class="nextBtn primary" data-next="4">आगे बढ़ें →</button></div>
+</div>
+
+<div class="card wizard-step-card" id="step4">
+  <div class="step-kicker">STEP 4 OF 6</div><h2>🔍 4. रिव्यू चेक करें</h2>
+  <div class="sub">पेमेंट करने से पहले नीचे सभी जानकारी एक बार ध्यान से जाँच लें।</div>
+  <div id="reviewBox" class="review-box"></div>
+  <div id="reviewPhotoBox" class="filepreview" style="margin-top:14px"><div class="previewlabel">🖼️ आपकी चुनी हुई Photo / PDF</div><div id="reviewPhotoContent" class="small">फाइल का Preview यहाँ दिखेगा।</div></div>
+  <div class="wizard-actions"><button type="button" class="backBtn" data-back="3">← वापस</button><button type="button" class="nextBtn primary" data-next="5">रिव्यू सही है →</button></div>
+</div>
+
+<div class="card wizard-step-card" id="step5">
+  <div class="step-kicker">STEP 5 OF 6</div><h2>💳 5. पेमेंट का भुगतान करें</h2>
+  <div class="sub">रिव्यू के बाद अपना भुगतान विकल्प चुनें और राशि की जाँच करें।</div>
+  <div class="payment-choice-grid">
+    <label class="payment-choice"><span>💵</span><div><b>Cash Payment</b><small>दुकान पर भुगतान करें</small></div><input type="radio" name="payChoice" value="CASH" checked></label>
+    <label class="payment-choice"><span>💳</span><div><b>Online Payment</b><small>ऑनलाइन भुगतान विकल्प</small></div><input type="radio" name="payChoice" value="ONLINE"></label>
+    <label class="payment-choice"><span>🧪</span><div><b>Demo / Test</b><small>टेस्ट के लिए</small></div><input type="radio" name="payChoice" value="DEMO"></label>
+  </div>
+  <div class="grid" style="margin-top:14px"><div><label>भुगतान</label><select id="pay"><option value="CASH">💵 दुकान पर Cash दूंगा</option><option value="DEMO">🧪 Demo / Test</option><option value="ONLINE">💳 Online Payment</option></select></div><div><label>अनुमानित शुल्क ₹</label><input id="price" type="number" value="5"></div></div>
+  <div class="wizard-actions"><button type="button" class="backBtn" data-back="4">← वापस</button><button type="button" class="nextBtn primary" data-next="6">पेमेंट के बाद आगे बढ़ें →</button></div>
+</div>
+
+<div class="card wizard-step-card" id="step6">
+  <div class="step-kicker">STEP 6 OF 6</div><h2>🚀 6. प्रिंट का ऑर्डर भेजें</h2>
+  <div class="final-order-box"><span>✅</span><div><b>सब तैयार है!</b><small>अब आपका प्रिंट ऑर्डर दुकान पर भेजा जाएगा। Approval के बाद प्रिंट तैयार होगा।</small></div></div>
+  <p id="msg"></p>
+  <div class="wizard-actions payment-next-only"><span></span><button id="submit" class="green order-submit">📤 प्रिंट का ऑर्डर भेजें</button></div>
+</div>
+<div class="footer">QR se Print • Scan → Upload → Pay → Print</div>
+</div>
+
+<div id="docEditor" class="doc-editor hide"><div class="doc-editor-box">
+  <div style="padding:10px 13px 4px"><h2 style="margin:0;color:var(--navy);font-size:20px">📑 Document Scanner Editor</h2><div class="doc-small" id="docEditorName">Photo/PDF edit करें</div></div>
+  <div class="doc-toolbar">
+    <button id="edCrop" class="blue">✂️ Crop / 4-Corner</button><button id="edRotate" class="blue">↻ Rotate</button><button id="edFilter" class="blue">🎨 Color Filter</button><button id="edEraser" class="blue">🧽 Eraser</button><button id="edSignature" class="blue">✍️ Signature</button><button id="edWatermark" class="blue">💧 Watermark</button><button id="edReset" type="button">↩ Reset</button><button id="edAdjust" class="blue">🎨 Color Adjust</button>
+  </div>
+  <div id="filterMenu" class="filter-menu hide"><button data-filter="normal">Original</button><button data-filter="soft">Soft Tone</button><button data-filter="sharp">Sharp Black</button><button data-filter="bw">B&W</button><button data-filter="carbon">Carbon Black</button><button data-filter="gray">Grayscale</button></div><div id="selectedFilterAdjustLabel" class="doc-small hide" style="margin-top:6px;font-weight:700">🎨 Selected Color Filter — नीचे Color Adjust से fine-tune करें</div><div id="adjustMenu" class="filter-menu hide" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;overflow:auto;max-height:250px"><label class="doc-small">Brightness <input id="adjBrightness" type="range" min="50" max="150" value="100"><span id="adjBrightnessVal">100%</span></label><label class="doc-small">Contrast <input id="adjContrast" type="range" min="50" max="150" value="100"><span id="adjContrastVal">100%</span></label><label class="doc-small">Saturation <input id="adjSaturation" type="range" min="0" max="200" value="100"><span id="adjSaturationVal">100%</span></label><label class="doc-small">Temperature <input id="adjTemperature" type="range" min="-50" max="50" value="0"><span id="adjTemperatureVal">0</span></label><label class="doc-small">Exposure <input id="adjExposure" type="range" min="-50" max="50" value="0"><span id="adjExposureVal">0</span></label><label class="doc-small">Sharpness <input id="adjSharpness" type="range" min="0" max="100" value="0"><span id="adjSharpnessVal">0</span></label><label class="doc-small">Shadows <input id="adjShadows" type="range" min="-50" max="50" value="0"><span id="adjShadowsVal">0</span></label><label class="doc-small">Highlights <input id="adjHighlights" type="range" min="-50" max="50" value="0"><span id="adjHighlightsVal">0</span></label><label class="doc-small">B&W / Grayscale <input id="adjBW" type="range" min="0" max="100" value="0"><span id="adjBWVal">0%</span></label><button id="adjReset" class="red" type="button">↩ Remove / Reset Adjustments</button></div>
+  <div id="docEditorNote" class="doc-note">📌 Photo/PDF अभी upload नहीं हुआ है। पहले सभी Document Scanner settings लगाएँ, फिर <b>Save & Continue</b> दबाने पर final file upload होगी।</div>
+  <div class="doc-work"><div id="docStage" class="doc-stage"><canvas id="docCanvas"></canvas><iframe id="docPdf" class="doc-pdf hide"></iframe></div></div>
+  <div class="doc-footer"><button id="edCancel" class="red">Cancel</button><button id="edApply" class="green">✅ Save & Continue</button></div>
+</div></div>
+<div id="cropModal" class="modal hide"><div class="modalbox"><h2>✂️ Photo Resize & Crop</h2><p class="muted">पहले photo को crop/resize करें, फिर <b>Crop & Add</b> दबाएँ।</p><div class="croparea"><div class="touchcrop"><canvas id="cropCanvas"></canvas><div id="cropHint">👆 पूरी फोटो ऊपर दिखाई देगी। चारों कोनों को अलग-अलग drag करें; कोई fixed ratio नहीं है।</div><div class="row" style="margin-top:8px"><button id="rotateLeft" type="button" class="blue">↶ 90° Left</button><button id="rotateRight" type="button" class="blue">↷ 90° Right</button><button id="fitCrop" type="button" class="blue">🖼️ पूरी फोटो दिखाएँ</button></div><div class="small" id="rotationInfo" style="margin-top:6px">Rotation: 0°</div></div><div class="note" style="margin-top:10px">🔲 <b>Free 4-Corner Crop:</b> चारों corners independent हैं। किसी भी corner को जहाँ चाहें ले जाएँ। Selected हिस्सा perspective के साथ सीधा होकर final photo बनेगा। कोई fixed ratio नहीं है।</div><div class="hide"><input id="cx"><input id="cy"><input id="cw"><input id="ch"><input id="rw"><input id="rh"></div><div class="row"><button id="cancelCrop" class="red">Cancel</button><button id="applyCrop" class="green">✂️ Crop & Add</button></div></div></div>
+<script>
+let uploaded=[]; let cropFile=null; let cropTarget='main'; let cropObjectUrl=null; let wizardSelectedFiles=[]; const $=id=>document.getElementById(id);
+function syncPrintColorForType(){const isPassport=$('type')?.value==='passport'; const mode=$('mode'); if(!mode)return; const bw=mode.querySelector('option[value="BW"]'); if(bw)bw.hidden=isPassport; if(isPassport)mode.value='COLOR';}
+$('mode').addEventListener('change',()=>{if($('type')?.value==='passport')$('mode').value='COLOR'; if(current===4)review();});
+$('type').onchange=()=>{
+  const t=$('type').value;
+  syncPrintColorForType();
+  // Requested: changing print type clears all previously selected/uploaded/editor data.
+  uploaded=[]; editorQueue=[]; croppedFront=null; croppedBack=null;
+  renderFiles(); showSelectedPreview(null);
+  $('files').value=''; $('front').value=''; $('back').value=''; $('panfile').value='';
+  $('frontPreview').classList.add('hide'); $('backPreview').classList.add('hide'); $('panPreview').classList.add('hide'); $('idprev').classList.add('hide');
+  $('frontStatus').textContent=''; $('backStatus').textContent=''; $('panStatus').textContent='';
+  $('idbox').classList.toggle('hide',t!=='id'); $('panbox').classList.toggle('hide',t!=='pan');
+  const general=t!=='id' && t!=='pan';
+  $('files').closest('div').style.display=general?'':'none';
+  $('docEditorNote').textContent='📑 '+$('type').options[$('type').selectedIndex].text+' — चुनी गई files पर Document Scanner की सभी settings लागू होंगी।';
+  if(t==='document') $('files').accept='image/*,application/pdf,.pdf';
+  else $('files').accept='image/*';
+};
+const canvas=$('cropCanvas'), ctx=canvas.getContext('2d');
+let cropImgObj=new Image(),dispW=0,dispH=0,scaleX=1,scaleY=1;
+let quad={nw:{x:0,y:0},ne:{x:0,y:0},sw:{x:0,y:0},se:{x:0,y:0}};
+let drag=null,rotation=0,rotatedObjectUrl=null;
+function drawCrop(){
+  if(!cropImgObj.naturalWidth)return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(cropImgObj,0,0,dispW,dispH);
+  ctx.fillStyle='rgba(0,0,0,.50)';ctx.fillRect(0,0,dispW,dispH);
+  ctx.save();
+  ctx.beginPath();ctx.moveTo(quad.nw.x,quad.nw.y);ctx.lineTo(quad.ne.x,quad.ne.y);ctx.lineTo(quad.se.x,quad.se.y);ctx.lineTo(quad.sw.x,quad.sw.y);ctx.closePath();ctx.clip();
+  ctx.drawImage(cropImgObj,0,0,dispW,dispH);ctx.restore();
+  ctx.strokeStyle='#00e5ff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(quad.nw.x,quad.nw.y);ctx.lineTo(quad.ne.x,quad.ne.y);ctx.lineTo(quad.se.x,quad.se.y);ctx.lineTo(quad.sw.x,quad.sw.y);ctx.closePath();ctx.stroke();
+  const hs=14;ctx.fillStyle='#fff';Object.values(quad).forEach(p=>ctx.fillRect(p.x-hs/2,p.y-hs/2,hs,hs));
+}
+function syncFields(){
+  const minX=Math.min(quad.nw.x,quad.ne.x,quad.sw.x,quad.se.x),minY=Math.min(quad.nw.y,quad.ne.y,quad.sw.y,quad.se.y);
+  const maxX=Math.max(quad.nw.x,quad.ne.x,quad.sw.x,quad.se.x),maxY=Math.max(quad.nw.y,quad.ne.y,quad.sw.y,quad.se.y);
+  $('cx').value=Math.round(minX*scaleX);$('cy').value=Math.round(minY*scaleY);$('cw').value=Math.max(1,Math.round((maxX-minX)*scaleX));$('ch').value=Math.max(1,Math.round((maxY-minY)*scaleY));
+}
+function setupCropCanvas(){
+  const nw=cropImgObj.naturalWidth,nh=cropImgObj.naturalHeight;if(!nw||!nh)return;
+  const maxW=Math.max(280,Math.min(window.innerWidth-70,820)),maxH=Math.max(220,Math.min(window.innerHeight*0.58,620));
+  const k=Math.min(maxW/nw,maxH/nh,1);dispW=Math.max(1,Math.round(nw*k));dispH=Math.max(1,Math.round(nh*k));
+  canvas.width=dispW;canvas.height=dispH;canvas.style.width=dispW+'px';canvas.style.height=dispH+'px';scaleX=nw/dispW;scaleY=nh/dispH;
+  quad={nw:{x:0,y:0},ne:{x:dispW,y:0},sw:{x:0,y:dispH},se:{x:dispW,y:dispH}};syncFields();drawCrop();
+  $('cropHint').textContent='👆 चारों कोनों को अलग-अलग खींचें। जितना हिस्सा select होगा, उतना ही सीधा करके final photo बनेगा।';
+}
+function openCrop(file,target){cropFile=file;cropTarget=target;rotation=0;if(cropObjectUrl)URL.revokeObjectURL(cropObjectUrl);if(rotatedObjectUrl)URL.revokeObjectURL(rotatedObjectUrl);cropObjectUrl=URL.createObjectURL(file);cropImgObj.onload=setupCropCanvas;cropImgObj.src=cropObjectUrl;$('rotationInfo').textContent='Rotation: 0°';$('cropModal').classList.remove('hide');}
+async function rotateCrop(deg){
+  if(!cropImgObj.naturalWidth)return;rotation=(rotation+deg+360)%360;const src=cropImgObj,c=document.createElement('canvas'),swap=Math.abs(rotation)%180===90;
+  c.width=swap?src.naturalHeight:src.naturalWidth;c.height=swap?src.naturalWidth:src.naturalHeight;const x=c.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.translate(c.width/2,c.height/2);x.rotate(rotation*Math.PI/180);x.drawImage(src,-src.naturalWidth/2,-src.naturalHeight/2);
+  const blob=await new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(Error('Rotation image नहीं बन पाई')),'image/jpeg',0.98));if(rotatedObjectUrl)URL.revokeObjectURL(rotatedObjectUrl);rotatedObjectUrl=URL.createObjectURL(blob);cropImgObj.onload=setupCropCanvas;cropImgObj.src=rotatedObjectUrl;$('rotationInfo').textContent='Rotation: '+rotation+'°';
+}
+function renderFiles(){
+  const box=$('filelist');
+  if(!box)return;
+  box.innerHTML='';
+  if(!uploaded.length){
+    box.innerHTML='<div class=\"small\">अभी कोई edited file तैयार नहीं है।</div>';
+    return;
+  }
+  const wrap=document.createElement('div');
+  wrap.className='uploaded-list';
+  uploaded.forEach((f,i)=>{
+    const row=document.createElement('div');
+    row.className='uploaded-row';
+    const isPdf=f.mime==='application/pdf'||String(f.name||'').toLowerCase().endsWith('.pdf');
+    const icon=isPdf?'📄':'🖼️';
+    row.innerHTML='<span>'+icon+' '+(f.name||('File '+(i+1)))+'</span>';
+    const actions=document.createElement('div');
+    actions.className='row';
+    const view=document.createElement('button');
+    view.type='button'; view.className='blue'; view.textContent='👁️ Review';
+    view.onclick=()=>showResultPreview(f);
+    const del=document.createElement('button');
+    del.type='button'; del.className='red'; del.textContent='✕ Remove';
+    del.onclick=()=>{uploaded.splice(i,1);renderFiles();if(uploaded.length)showResultPreview(uploaded[uploaded.length-1]);else showSelectedPreview(null);};
+    actions.appendChild(view); actions.appendChild(del); row.appendChild(actions); wrap.appendChild(row);
+  });
+  box.appendChild(wrap);
+}
+
+function clearPreviewUrl(){if(window.selectedPreviewUrl){try{URL.revokeObjectURL(window.selectedPreviewUrl)}catch{}window.selectedPreviewUrl=null;}}
+function showSelectedPreview(file){const box=$('selectedPreview');clearPreviewUrl();if(!file){box.classList.add('hide');box.innerHTML='';return;}window.selectedPreviewUrl=URL.createObjectURL(file);box.classList.remove('hide');box.innerHTML='<div class="previewlabel">👁️ चुनी हुई फाइल का Preview</div>';const isPdf=file.type==='application/pdf'||file.name.toLowerCase().endsWith('.pdf');if(file.type.startsWith('image/')){const img=document.createElement('img');img.src=window.selectedPreviewUrl;img.alt=file.name;box.appendChild(img);}else if(isPdf){const iframe=document.createElement('iframe');iframe.src=window.selectedPreviewUrl;iframe.title='PDF Preview';box.appendChild(iframe);}}
+function paperClass(p){return String(p||'A4').toUpperCase()==='A4'?'a4':'p46';}
+function paperLabel(p){return String(p||'A4').toUpperCase()==='A4'?'A4':'4×6';}
+async function showResultPreview(x){const box=$('selectedPreview');clearPreviewUrl();box.classList.remove('hide');box.innerHTML='<div class="previewlabel">✅ '+(x.name||'File')+' — Review Preview</div><div class="small">Selected paper पर preview तैयार हो रहा है…</div>';try{if(x.mime&&x.mime.startsWith('image/')){const paper=$('paper').value||'A4';const img=document.createElement('img');img.className='paperimg';img.src=x.url+'?preview='+Date.now();img.alt=x.name||'preview';const selectedMode=(document.getElementById('mode')?.value||'COLOR'); img.style.filter=selectedMode==='BW'?'grayscale(1) contrast(1.08)':'none'; const frame=document.createElement('div');frame.className='paperpreview '+paperClass(paper);frame.appendChild(img);const cap=document.createElement('div');cap.className='papercaption';cap.textContent='📄 '+paperLabel(paper)+' page • ऊपर से सिर्फ 2 mm';box.innerHTML='<div class="previewlabel">✅ Edit के बाद Review Preview</div>';box.appendChild(frame);box.appendChild(cap);img.onload=()=>{const maxH=frame.clientHeight-(frame.clientHeight*(2/(paper==='A4'?297:152.4)));const naturalRatio=img.naturalHeight?img.naturalWidth/img.naturalHeight:1;const frameRatio=frame.clientWidth/frame.clientHeight;let w=frame.clientWidth,h=w/naturalRatio;if(h>maxH){h=maxH;w=h*naturalRatio;}img.style.width=Math.round(w)+'px';img.style.height=Math.round(h)+'px';img.style.left=Math.round((frame.clientWidth-w)/2)+'px';img.style.top=Math.round(frame.clientHeight*(2/(paper==='A4'?297:152.4)))+'px';};return;}const frame=document.createElement('div');frame.className='paperpreview '+paperClass($('paper').value||'A4');const iframe=document.createElement('iframe');iframe.src=x.url+'#zoom=page-fit';const selectedMode=(document.getElementById('mode')?.value||'COLOR'); iframe.style.cssText='position:absolute;left:0;top:0;width:100%;height:100%;border:0;background:#fff;filter:'+(selectedMode==='BW'?'grayscale(1) contrast(1.08)':'none')+';';frame.appendChild(iframe);box.innerHTML='<div class="previewlabel">✅ PDF — Review Preview</div>';box.appendChild(frame);}catch(e){box.innerHTML+='<div class="small">⚠️ Preview load नहीं हुआ।</div>';}}
+$('paper').addEventListener('change',()=>{if(uploaded.length)showResultPreview(uploaded[0]);});
+
+// -------- Document Scanner style editor --------
+let editorQueue=[],editorFile=null,editorOriginal=null,editorTarget='main',editorAdjust={brightness:100,contrast:100,saturation:100,temperature:0,exposure:0,sharpness:0,shadows:0,highlights:0,bw:0},editorCanvas=$('docCanvas'),editorCtx=editorCanvas.getContext('2d'),editorImg=new Image(),editorFilter='normal',editorRotation=0,editorPdf=false,editorPdfMeta=null,editorErasing=false,editorEraseDown=false;
+const filterDefs={normal:'none',soft:'brightness(1.04) contrast(.96) saturate(.9)',sharp:'contrast(1.35) brightness(.98) saturate(.75)',bw:'grayscale(1) contrast(1.18)',carbon:'grayscale(1) contrast(1.65) brightness(.9)',gray:'grayscale(1)'};
+function adjustCss(a=editorAdjust){const b=a.brightness/100,c=a.contrast/100,s=a.saturation/100,e=1+a.exposure/100,t=a.temperature;const sep=t>0?`sepia(${Math.min(.45,t/110)})`:t<0?`hue-rotate(${t/8}deg) saturate(${Math.max(.7,1+t/160)})`:'';const bw=a.bw/100;return `brightness(${b*e}) contrast(${c}) saturate(${s}) ${sep} grayscale(${bw})`; }
+function resetAdjustments(){editorAdjust={brightness:100,contrast:100,saturation:100,temperature:0,exposure:0,sharpness:0,shadows:0,highlights:0,bw:0}; syncAdjustUI(); if(editorPdf){$('docPdf').style.filter=(filterDefs[editorFilter]||'none')+' '+adjustCss();} else drawEditorImage();}
+function syncAdjustUI(){for(const [k,v] of Object.entries(editorAdjust)){const el=$('adj'+k.charAt(0).toUpperCase()+k.slice(1));const out=$(el?.id+'Val');if(el)el.value=v;if(out)out.textContent=k==='brightness'||k==='contrast'||k==='saturation'||k==='bw'?v+'%':v;} }
+function adjustmentPayload(){return {...editorAdjust};}
+
+function blobUrl(blob){return URL.createObjectURL(blob)}
+function drawEditorImage(){if(!editorImg.naturalWidth)return;const max=1600,k=Math.min(max/editorImg.naturalWidth,max/editorImg.naturalHeight,1);let w=Math.max(1,Math.round(editorImg.naturalWidth*k)),h=Math.max(1,Math.round(editorImg.naturalHeight*k));if(Math.abs(editorRotation)%180===90)[w,h]=[h,w];editorCanvas.width=w;editorCanvas.height=h;editorCanvas.style.filter='none';editorCtx.save();editorCtx.filter=(filterDefs[editorFilter]&&editorFilter!=='normal'?filterDefs[editorFilter]:'none'); if(editorAdjust){editorCtx.filter=(editorFilter!=='normal'?filterDefs[editorFilter]+' ':'')+adjustCss();}editorCtx.fillStyle='#fff';editorCtx.fillRect(0,0,w,h);editorCtx.translate(w/2,h/2);editorCtx.rotate(editorRotation*Math.PI/180);editorCtx.drawImage(editorImg,-editorImg.naturalWidth*k/2,-editorImg.naturalHeight*k/2,editorImg.naturalWidth*k,editorImg.naturalHeight*k);editorCtx.filter='none';editorCtx.restore();}
+function openDocumentEditor(file,target='main'){editorFile=file;editorOriginal=file;editorTarget=target;editorPdf=file.type==='application/pdf'||file.name.toLowerCase().endsWith('.pdf');editorFilter='normal';editorRotation=0;editorErasing=false;editorPdfMeta=null;resetAdjustments();$('docEditorName').textContent=file.name+' — '+(editorPdf?'PDF':'Photo');$('filterMenu').classList.add('hide');$('adjustMenu').classList.add('hide');$('selectedFilterAdjustLabel').classList.add('hide');$('docPdf').classList.toggle('hide',!editorPdf);$('docCanvas').classList.toggle('hide',editorPdf);$('docEditor').classList.remove('hide');if(editorPdf){const u=URL.createObjectURL(file);$('docPdf').src=u;$('docPdf').style.filter=filterDefs[editorFilter]||'none';editorPdfMeta={url:u};$('docEditorNote').textContent='PDF Editor: Rotate / Watermark / Signature / Eraser / Color Filter सभी tools उपलब्ध हैं। PDF filter preview browser में लागू होगा; Save पर original PDF सुरक्षित रखा जाएगा और B&W filters print mode में भी दर्ज होंगे।';}else{const u=URL.createObjectURL(file);editorImg.onload=()=>drawEditorImage();editorImg.src=u;$('docEditorNote').textContent='Photo में Crop, Rotate, Color Filter, Eraser, Signature और Watermark सभी tools उपलब्ध हैं।';}}
+function canvasToBlob(){return new Promise((resolve,reject)=>editorCanvas.toBlob(b=>b?resolve(b):reject(Error('Edited image तैयार नहीं हुई')),'image/jpeg',.96));}
+function promptWatermark(){const t=prompt('Watermark text लिखें:','QR se Print');if(!t)return;editorCtx.save();editorCtx.globalAlpha=.28;editorCtx.fillStyle='#111827';editorCtx.font=Math.max(18,editorCanvas.width/24)+'px Arial';editorCtx.textAlign='center';editorCtx.translate(editorCanvas.width/2,editorCanvas.height/2);editorCtx.rotate(-Math.PI/8);editorCtx.fillText(t,0,0);editorCtx.restore();}
+function signatureDialog(){const wrap=document.createElement('div');wrap.className='modal';wrap.innerHTML='<div class="modalbox" style="max-width:620px"><h2>✍️ Signature</h2><p class="small">नीचे उंगली/स्टाइलस से signature बनाएं।</p><canvas class="signature-pad" id="sigPad"></canvas><div class="row" style="margin-top:8px"><button class="red" id="sigClear">Clear</button><button class="green" id="sigUse">Use Signature</button></div></div>';document.body.appendChild(wrap);const c=wrap.querySelector('#sigPad'),x=c.getContext('2d');let down=false,last=null;function p(e){const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height}}c.width=900;c.height=300;c.addEventListener('pointerdown',e=>{down=true;last=p(e);c.setPointerCapture(e.pointerId)});c.addEventListener('pointermove',e=>{if(!down)return;const q=p(e);x.strokeStyle='#111827';x.lineWidth=5;x.lineCap='round';x.beginPath();x.moveTo(last.x,last.y);x.lineTo(q.x,q.y);x.stroke();last=q});c.addEventListener('pointerup',()=>down=false);wrap.querySelector('#sigClear').onclick=()=>x.clearRect(0,0,c.width,c.height);wrap.querySelector('#sigUse').onclick=()=>{const u=c.toDataURL('image/png'),im=new Image();im.onload=()=>{const w=Math.min(editorCanvas.width*.35,420),h=w*(im.height/im.width);editorCtx.drawImage(im,editorCanvas.width-w-20,editorCanvas.height-h-20,w,h);wrap.remove()};im.src=u;};}
+$('edFilter').onclick=()=>{const opening=$('filterMenu').classList.toggle('hide')===false;if(opening){$('adjustMenu').classList.remove('hide');$('selectedFilterAdjustLabel').classList.remove('hide');syncAdjustUI();}};document.querySelectorAll('#filterMenu button').forEach(b=>b.onclick=()=>{editorFilter=b.dataset.filter;$('selectedFilterAdjustLabel').textContent='🎨 '+b.textContent+' चुना गया — नीचे Color Adjust से इसी filter को fine-tune करें';$('selectedFilterAdjustLabel').classList.remove('hide');$('adjustMenu').classList.remove('hide');syncAdjustUI();if(editorPdf){$('docPdf').style.filter=(filterDefs[editorFilter]||'none')+' '+adjustCss();$('mode').value=(editorFilter==='normal'||editorFilter==='soft'||editorFilter==='sharp')?'COLOR':'BW';$('docEditorNote').textContent='✅ PDF पर '+b.textContent+' preview लागू है। नीचे Color Adjust से brightness/contrast आदि बदल सकते हैं। Save & Continue पर दोनों changes साथ में लागू होंगे।';}else drawEditorImage();});
+$('edAdjust').onclick=()=>{$('adjustMenu').classList.toggle('hide');$('selectedFilterAdjustLabel').classList.toggle('hide',$('adjustMenu').classList.contains('hide'));syncAdjustUI();};
+['Brightness','Contrast','Saturation','Temperature','Exposure','Sharpness','Shadows','Highlights','BW'].forEach(k=>{const el=$('adj'+k);if(el)el.addEventListener('input',()=>{const key=k.charAt(0).toLowerCase()+k.slice(1);editorAdjust[key]=Number(el.value);const out=$(el.id+'Val');if(out)out.textContent=(['brightness','contrast','saturation','bw'].includes(key)?el.value+'%':el.value);if(editorPdf){$('docPdf').style.filter=(filterDefs[editorFilter]||'none')+' '+adjustCss();}else drawEditorImage();});});
+$('adjReset').onclick=()=>resetAdjustments();
+
+$('edRotate').onclick=()=>{if(editorPdf){applyPdfEdit({rotate:90}).then(openEditedPdf).catch(e=>alert(e.message));}else{editorRotation=(editorRotation+90)%360;drawEditorImage();}};
+$('edWatermark').onclick=()=>{if(editorPdf){const t=prompt('PDF watermark text:','QR se Print');if(t)applyPdfEdit({watermark:t}).then(openEditedPdf).catch(e=>alert(e.message));}else promptWatermark();};
+$('edSignature').onclick=()=>{if(editorPdf){alert('PDF में Signature लगाने के लिए पहले Signature image चुनें/बनाएं।');signatureDialogPdf();}else signatureDialog();};
+$('edEraser').onclick=()=>{if(editorPdf){const p=prompt('PDF page number और white box (x%,y%,w%,h%) दें, जैसे: 1,10,10,20,10');if(p)applyPdfEdit({erase:p}).then(openEditedPdf).catch(e=>alert(e.message));}else{editorErasing=!editorErasing;editorCanvas.classList.toggle('erase-cursor',editorErasing);$('docEditorNote').textContent=editorErasing?'🧽 Eraser ON: photo पर drag करके white area हटाएँ।':'Eraser OFF';}};
+editorCanvas.addEventListener('pointerdown',e=>{if(!editorErasing)return;editorEraseDown=true;editorCanvas.setPointerCapture(e.pointerId);eraseAt(e)});editorCanvas.addEventListener('pointermove',e=>{if(editorEraseDown)eraseAt(e)});editorCanvas.addEventListener('pointerup',()=>editorEraseDown=false);
+function eraseAt(e){const r=editorCanvas.getBoundingClientRect(),x=(e.clientX-r.left)*editorCanvas.width/r.width,y=(e.clientY-r.top)*editorCanvas.height/r.height;editorCtx.fillStyle='#fff';editorCtx.beginPath();editorCtx.arc(x,y,Math.max(12,editorCanvas.width/45),0,Math.PI*2);editorCtx.fill();}
+$('edReset').onclick=()=>{if(editorPdf){editorFilter='normal';$('docPdf').style.filter='none';if(editorFile){$('docPdf').src=URL.createObjectURL(editorOriginal)}$('mode').value='COLOR';}else{editorFilter='normal';editorRotation=0;editorErasing=false;resetAdjustments();$('filterMenu').classList.add('hide');$('adjustMenu').classList.add('hide');$('selectedFilterAdjustLabel').classList.add('hide');drawEditorImage();}};
+async function loadPdfJs(){
+  if(window.pdfjsLib)return window.pdfjsLib;
+  if(window.__pdfJsPromise)return window.__pdfJsPromise;
+  window.__pdfJsPromise=new Promise((resolve,reject)=>{
+    const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';s.onload=()=>{try{window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';resolve(window.pdfjsLib)}catch(e){reject(e)}};s.onerror=()=>reject(Error('PDF Scanner engine load नहीं हुआ। Internet connection check करें।'));document.head.appendChild(s);
+  });
+  return window.__pdfJsPromise;
+}
+async function renderPdfPageToBlob(pdf,pageNo=1,scale=1.6){
+  const pdfjs=await loadPdfJs();const data=pdf instanceof File?await pdf.arrayBuffer():await (await fetch(pdf.url)).arrayBuffer();
+  const doc=await pdfjs.getDocument({data}).promise;const page=await doc.getPage(pageNo);const vp=page.getViewport({scale});
+  const c=document.createElement('canvas');c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+  return {canvas:c,width:vp.width,height:vp.height,count:doc.numPages,doc};
+}
+async function pdfFourCornerCrop(){
+  if(!editorFile)throw Error('PDF नहीं है');
+  const first=await renderPdfPageToBlob(editorFile,1,1.7);
+  cropPdfMeta={doc:first.doc,pageCount:first.count,firstCanvas:first.canvas};
+  const blob=await new Promise((res,rej)=>first.canvas.toBlob(b=>b?res(b):rej(Error('PDF page render नहीं हुई')),'image/jpeg',.96));
+  cropFile=new File([blob],'pdf-page-1.jpg',{type:'image/jpeg'});cropTarget=editorTarget||'main';rotation=0;
+  if(cropObjectUrl)URL.revokeObjectURL(cropObjectUrl);cropObjectUrl=URL.createObjectURL(blob);cropImgObj.onload=setupCropCanvas;cropImgObj.src=cropObjectUrl;$('rotationInfo').textContent='PDF 4-Corner Crop';$('cropHint').textContent='📄 PDF Page 1 को 4 corners से select करें। Apply करने पर यही crop सभी PDF pages पर उनके अपने size के अनुसार लगेगा।';$('cropModal').classList.remove('hide');
+}
+async function applyPdfFourCorner(){
+  const doc=cropPdfMeta&&cropPdfMeta.doc;if(!doc)throw Error('PDF crop session नहीं मिला');
+  const src=[quad.nw,quad.ne,quad.se,quad.sw];const baseW=dispW,baseH=dispH;
+  const norm=src.map(p=>({x:p.x/baseW,y:p.y/baseH}));
+  const imgs=[];
+  for(let i=1;i<=doc.numPages;i++){
+    const page=await doc.getPage(i),vp=page.getViewport({scale:1.7});const c=document.createElement('canvas');c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+    const img=new Image();const u=URL.createObjectURL(await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(Error('PDF page render failed')),'image/jpeg',.96)));await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=u});
+    const q=norm.map(p=>({x:p.x*c.width,y:p.y*c.height}));const saveQuad=quad;quad={nw:q[0],ne:q[1],se:q[2],sw:q[3]};const oldImg=cropImgObj;cropImgObj=img;const oldDispW=dispW,oldDispH=dispH,oldScaleX=scaleX,oldScaleY=scaleY;dispW=c.width;dispH=c.height;scaleX=1;scaleY=1;const b=await perspectiveCrop();imgs.push(b);quad=saveQuad;cropImgObj=oldImg;dispW=oldDispW;dispH=oldDispH;scaleX=oldScaleX;scaleY=oldScaleY;URL.revokeObjectURL(u);
+  }
+  const fd=new FormData();imgs.forEach((b,i)=>fd.append('pages',b,`page-${i+1}.jpg`));const r=await fetch('/api/pdf-from-images',{method:'POST',body:fd});const x=await r.json();if(!r.ok||x.error)throw Error(x.error||'PDF 4-corner crop failed');return x;
+}
+let cropPdfMeta=null;
+$('edCrop').onclick=async()=>{try{if(editorPdf){await pdfFourCornerCrop();}else{const b=editorCanvas.toDataURL('image/jpeg',.96);const blob=await (await fetch(b)).blob();openCrop(new File([blob],'editor-photo.jpg',{type:'image/jpeg'}),editorTarget||'main');}}catch(e){alert(e.message)}};
+$('edCancel').onclick=()=>{$('docEditor').classList.add('hide');editorFile=null;$('docPdf').style.filter='none';};
+window.__saveEditorAndContinue=async()=>{try{if(!editorFile)throw Error('File नहीं है');const target=editorTarget||'main';if(editorPdf){$('docEditor').classList.add('hide');if(editorPdf && Object.values(editorAdjust).some((v,i)=>v!==[100,100,100,0,0,0,0,0,0][i])){const z=await applyPdfEdit({filter:editorFilter,adjust:adjustmentPayload()});editorFile=z;} await finalizeUploadedFile(editorFile,{filter:editorFilter,target});$('docPdf').style.filter='none';return true;}const b=await canvasToBlob();const f=new File([b],(editorFile.name||'photo').replace(/\.[^.]+$/,'')+'-edited.jpg',{type:'image/jpeg'});$('docEditor').classList.add('hide');await finalizeUploadedFile(f,{filter:editorFilter,target});return true;}catch(e){alert(e.message);return false}};
+$('edApply').onclick=()=>window.__saveEditorAndContinue();
+async function finalizeUploadedFile(file,meta={}){
+  if(!file)return;
+  const target=meta.target||editorTarget||'main';
+  const isPdf=file.type==='application/pdf'||String(file.name||'').toLowerCase().endsWith('.pdf');
+  // FINAL30 passport flow: after all scanner edits, generate the original 6-photo A4 passport layout.
+  if($('type').value==='passport'){
+    if(isPdf) throw Error('📸 पासपोर्ट फोटो के लिए JPG/PNG फोटो चुनें, PDF नहीं');
+    const fd=new FormData();
+    let blob=file;
+    if(file instanceof File){ blob=file; }
+    else { const rr=await fetch(file.url); blob=await rr.blob(); }
+    fd.append('photo',blob,'passport-source-'+Date.now()+'.jpg');
+    const rr=await fetch('/api/passport-layout',{method:'POST',body:fd});
+    const px=await rr.json();
+    if(!rr.ok||px.error) throw Error(px.error||'Passport A4 layout failed');
+    px.filter=meta.filter||'normal';
+    uploaded=[px];
+    renderFiles();
+    $('msg').textContent='✅ 6 Passport Photos A4 में तैयार हैं — Review में देखें';
+    await showResultPreview(px);
+    if(editorQueue.length)processNextEditor();
+    return;
+  }
+  // PAN / Identity Card: after all scanner edits, place the edited card at
+  // the real 85.60 x 53.98 mm size on an A4 page.
+  if($('type').value==='pan'){
+    if(isPdf) throw Error('💳 PAN/Identity Card के लिए JPG/PNG photo चुनें');
+    const fd=new FormData();
+    const blob=file instanceof File ? file : await (await fetch(file.url)).blob();
+    fd.append('file',blob,'pan-identity-'+Date.now()+'.jpg');
+    const rr=await fetch('/api/card-layout',{method:'POST',body:fd});
+    const px=await rr.json();
+    if(!rr.ok||px.error) throw Error(px.error||'PAN/Identity Card A4 layout failed');
+    px.filter=meta.filter||'normal';
+    uploaded=[px]; renderFiles();
+    // PAN/Identity Card dedicated preview: show the generated A4 layout directly.
+    $('panPreview').src=px.url+'?preview='+Date.now();
+    $('panPreview').classList.remove('hide');
+    $('panStatus').textContent='✅ Card edited and A4 actual-size layout तैयार है — Preview नीचे देखें';
+    await showResultPreview(px);
+    return;
+  }
+  let x;
+  if(isPdf){
+    if(file instanceof File){const xs=await uploadFiles([file]);x=xs[0];}
+    else{x=file;}
+  }else{x=await uploadBlobAsFile(file,file.name||('edited-'+Date.now()+'.jpg'));}
+  x.filter=meta.filter||'normal';
+  if(target==='front'){
+    croppedFront=x;$('frontStatus').textContent='✅ Front — सभी Document Scanner settings लग गईं';$('frontPreview').src=x.url;$('frontPreview').classList.remove('hide');
+  }else if(target==='back'){
+    croppedBack=x;$('backStatus').textContent='✅ Back — सभी Document Scanner settings लग गईं';$('backPreview').src=x.url;$('backPreview').classList.remove('hide');
+  }else{
+    uploaded.push(x);renderFiles();await showResultPreview(x);
+  }
+  if(editorQueue.length)processNextEditor();
+}
+function processNextEditor(){if(!editorQueue.length)return;const f=editorQueue.shift();if(f.type&&f.type.startsWith('image/'))openCrop(f,'main');else openDocumentEditor(f,'main');}
+function startEditorQueue(files){editorQueue=files.slice();uploaded=[];renderFiles();processNextEditor();}
+async function openEditedPdf(x){editorFile=x;editorPdf=true;editorOriginal=x;const u=x.url+'?t='+Date.now();$('docPdf').src=u;$('docPdf').style.filter=filterDefs[editorFilter]||'none';}
+async function applyPdfEdit(payload){if(!editorFile)throw Error('PDF नहीं है');const fd=new FormData();const pdfBlob=editorFile instanceof File?editorFile:await (await fetch(editorFile.url)).blob();fd.append('file',pdfBlob,'document.pdf');fd.append('action',JSON.stringify(payload));const r=await fetch('/api/pdf-edit',{method:'POST',body:fd});const x=await r.json();if(!r.ok||x.error)throw Error(x.error||'PDF edit failed');return x;}
+function signatureDialogPdf(){const wrap=document.createElement('div');wrap.className='modal';wrap.innerHTML='<div class="modalbox" style="max-width:620px"><h2>✍️ PDF Signature</h2><p class="small">नीचे signature बनाएं; यह सभी PDF pages पर नीचे दाईं तरफ लगेगा।</p><canvas class="signature-pad" id="sigPdf"></canvas><div class="row" style="margin-top:8px"><button class="red" id="sc">Clear</button><button class="green" id="su">Apply to PDF</button></div></div>';document.body.appendChild(wrap);const c=wrap.querySelector('#sigPdf'),x=c.getContext('2d');c.width=900;c.height=300;let d=false,l;const p=e=>{const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height}};c.onpointerdown=e=>{d=true;l=p(e);c.setPointerCapture(e.pointerId)};c.onpointermove=e=>{if(!d)return;const q=p(e);x.strokeStyle='#111827';x.lineWidth=5;x.lineCap='round';x.beginPath();x.moveTo(l.x,l.y);x.lineTo(q.x,q.y);x.stroke();l=q};c.onpointerup=()=>d=false;wrap.querySelector('#sc').onclick=()=>x.clearRect(0,0,c.width,c.height);wrap.querySelector('#su').onclick=async()=>{try{const data=c.toDataURL('image/png'),blob=await (await fetch(data)).blob(),pdfBlob=editorFile instanceof File?editorFile:await (await fetch(editorFile.url)).blob(),fd=new FormData();fd.append('file',pdfBlob,'document.pdf');fd.append('signature',blob,'signature.png');fd.append('action',JSON.stringify({signature:true}));const rr=await fetch('/api/pdf-edit',{method:'POST',body:fd}),z=await rr.json();if(!rr.ok||z.error)throw Error(z.error||'PDF signature failed');wrap.remove();openEditedPdf(z);}catch(e){alert(e.message)}};}
+$('files').onchange=async()=>{const chosen=Array.from($('files').files||[]);if(!chosen.length)return;try{for(const f of chosen){if(!(f.type.startsWith('image/')||f.type==='application/pdf'||f.name.toLowerCase().endsWith('.pdf')))throw Error('केवल Photo या PDF चुनें');}wizardSelectedFiles=chosen.slice();showSelectedPreview(chosen[0]);$('filelist').textContent=chosen.map(x=>x.name).join(' | ');startEditorQueue(chosen);}catch(e){alert(e.message)}};
+$('cancelCrop').onclick=()=>{$('cropModal').classList.add('hide');$('files').value='';if(rotatedObjectUrl){URL.revokeObjectURL(rotatedObjectUrl);rotatedObjectUrl=null;}};
+$('fitCrop').onclick=()=>{if(cropImgObj.naturalWidth)setupCropCanvas();};$('rotateLeft').onclick=()=>rotateCrop(-90);$('rotateRight').onclick=()=>rotateCrop(90);window.addEventListener('resize',()=>{if(!$('cropModal').classList.contains('hide')&&cropImgObj.naturalWidth)setupCropCanvas();});
+function pos(e){const r=canvas.getBoundingClientRect();return{x:Math.max(0,Math.min(dispW,e.clientX-r.left)),y:Math.max(0,Math.min(dispH,e.clientY-r.top))};}
+function hitHandle(p){const hs=24,pts={nw:quad.nw,ne:quad.ne,sw:quad.sw,se:quad.se};for(const[k,v]of Object.entries(pts))if(Math.hypot(p.x-v.x,p.y-v.y)<=hs)return k;return null;}
+function pointInQuad(p){const pts=[quad.nw,quad.ne,quad.se,quad.sw];let inside=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const xi=pts[i].x,yi=pts[i].y,xj=pts[j].x,yj=pts[j].y,inter=((yi>p.y)!=(yj>p.y))&&(p.x<(xj-xi)*(p.y-yi)/(yj-yi)+xi);if(inter)inside=!inside;}return inside;}
+canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);const p=pos(e),h=hitHandle(p);if(h)drag={mode:h,sx:p.x,sy:p.y,orig:JSON.parse(JSON.stringify(quad))};else if(pointInQuad(p))drag={mode:'move',sx:p.x,sy:p.y,orig:JSON.parse(JSON.stringify(quad))};else drag=null;});
+canvas.addEventListener('pointermove',e=>{if(!drag)return;e.preventDefault();const p=pos(e),o=drag.orig;if(drag.mode==='move'){const dx=p.x-drag.sx,dy=p.y-drag.sy;Object.keys(quad).forEach(k=>{quad[k]={x:Math.max(0,Math.min(dispW,o[k].x+dx)),y:Math.max(0,Math.min(dispH,o[k].y+dy))};});}else{quad[drag.mode]={x:p.x,y:p.y};}syncFields();drawCrop();});canvas.addEventListener('pointerup',()=>drag=null);canvas.addEventListener('pointercancel',()=>drag=null);
+['cx','cy','cw','ch'].forEach(id=>$(id).addEventListener('input',()=>{}));
+function solveHomography(src,dst){let A=[],b=[];for(let i=0;i<4;i++){const X=src[i].x,Y=src[i].y,u=dst[i].x,v=dst[i].y;A.push([X,Y,1,0,0,0,-u*X,-u*Y]);b.push(u);A.push([0,0,0,X,Y,1,-v*X,-v*Y]);b.push(v);}for(let i=0;i<8;i++){let m=i;for(let r=i+1;r<8;r++)if(Math.abs(A[r][i])>Math.abs(A[m][i]))m=r;[A[i],A[m]]=[A[m],A[i]];[b[i],b[m]]=[b[m],b[i]];const piv=A[i][i]||1e-12;for(let c=i;c<8;c++)A[i][c]/=piv;b[i]/=piv;for(let r=0;r<8;r++)if(r!==i){const f=A[r][i];if(!f)continue;for(let c=i;c<8;c++)A[r][c]-=f*A[i][c];b[r]-=f*b[i];}}return [...b,1];}
+function invMap(H,u,v){const d=H[6]*u+H[7]*v+1;return{x:(H[0]*u+H[1]*v+H[2])/d,y:(H[3]*u+H[4]*v+H[5])/d};}
+async function perspectiveCrop(){
+  const src=[quad.nw,quad.ne,quad.se,quad.sw],top=Math.hypot(src[1].x-src[0].x,src[1].y-src[0].y),bottom=Math.hypot(src[2].x-src[3].x,src[2].y-src[3].y),left=Math.hypot(src[3].x-src[0].x,src[3].y-src[0].y),right=Math.hypot(src[2].x-src[1].x,src[2].y-src[1].y);
+  const outW=Math.max(1,Math.round(Math.max(top,bottom)*scaleX)),outH=Math.max(1,Math.round(Math.max(left,right)*scaleY));
+  const maxPixels=4500000,fac=Math.min(1,Math.sqrt(maxPixels/(outW*outH)));const W=Math.max(1,Math.round(outW*fac)),Hh=Math.max(1,Math.round(outH*fac));
+  const canvasOut=document.createElement('canvas');canvasOut.width=W;canvasOut.height=Hh;const octx=canvasOut.getContext('2d');const img=cropImgObj,iw=img.naturalWidth,ih=img.naturalHeight;
+  const hom=solveHomography([{x:0,y:0},{x:W-1,y:0},{x:W-1,y:Hh-1},{x:0,y:Hh-1}],src.map(p=>({x:p.x*scaleX,y:p.y*scaleY})));
+  const data=octx.createImageData(W,Hh),d=data.data;
+  const tmp=document.createElement('canvas');tmp.width=iw;tmp.height=ih;const tctx=tmp.getContext('2d',{willReadFrequently:true});tctx.drawImage(img,0,0,iw,ih);const sd=tctx.getImageData(0,0,iw,ih).data;
+  for(let y=0;y<Hh;y++)for(let x=0;x<W;x++){const q=invMap(hom,x,y),sx=Math.max(0,Math.min(iw-1,q.x)),sy=Math.max(0,Math.min(ih-1,q.y)),x0=Math.floor(sx),y0=Math.floor(sy),x1=Math.min(iw-1,x0+1),y1=Math.min(ih-1,y0+1),fx=sx-x0,fy=sy-y0,i=(y*W+x)*4;for(let c=0;c<4;c++){const a=sd[(y0*iw+x0)*4+c],b=sd[(y0*iw+x1)*4+c],cc=sd[(y1*iw+x0)*4+c],e=sd[(y1*iw+x1)*4+c];d[i+c]=a*(1-fx)*(1-fy)+b*fx*(1-fy)+cc*(1-fx)*fy+e*fx*fy;}}octx.putImageData(data,0,0);
+  return new Promise((resolve,reject)=>canvasOut.toBlob(b=>b?resolve(b):reject(Error('4-corner crop image नहीं बन पाई')),'image/jpeg',0.96));
+}
+async function uploadBlobAsFile(blob,name){const fd=new FormData();fd.append('files',blob,name);const r=await fetch('/api/upload',{method:'POST',body:fd});const x=await r.json();if(!r.ok||x.error)throw Error(x.error||'Upload failed');return x.files[0];}
+async function uploadFiles(files){const fd=new FormData();files.forEach(f=>fd.append('files',f));const r=await fetch('/api/upload',{method:'POST',body:fd});const x=await r.json();if(!r.ok||x.error)throw Error(x.error||'Upload failed');return x.files||[];}
+$('applyCrop').onclick=async()=>{try{if(cropPdfMeta){const x=await applyPdfFourCorner();cropPdfMeta=null;$('cropModal').classList.add('hide');openEditedPdf(x);return;}if(!cropFile||!cropImgObj.naturalWidth)throw Error('Photo अभी तैयार नहीं हुई');const blob=await perspectiveCrop();const f=new File([blob],'cropped-4corner-'+Date.now()+'.jpg',{type:'image/jpeg'});$('cropModal').classList.add('hide');if(cropTarget==='editor'){openDocumentEditor(f,editorTarget||'main');return;}if(cropTarget==='front'){openDocumentEditor(f,'front');return;}if(cropTarget==='back'){openDocumentEditor(f,'back');return;}openDocumentEditor(f,'main');}catch(e){alert(e.message)}};
+async function chooseAndCropId(input,status){const f=input.files[0];if(!f)return;try{const fd=new FormData();fd.append('file',f);const r=await fetch('/api/upload',{method:'POST',body:fd});const x=await r.json();if(x.error)throw Error(x.error);status.textContent='Selected: '+f.name;}catch(e){alert(e.message)}}
+let frontPreviewUrl=null, backPreviewUrl=null;
+function showIdPreview(input,imgId,statusId){
+  const f=input.files && input.files[0]; const img=$(imgId); const st=$(statusId);
+  if(!f){img.classList.add('hide'); img.removeAttribute('src'); st.textContent=''; return;}
+  if(!f.type.startsWith('image/')){img.classList.add('hide'); st.textContent='⚠️ केवल image file चुनें'; return;}
+  if(imgId==='frontPreview' && frontPreviewUrl) URL.revokeObjectURL(frontPreviewUrl);
+  if(imgId==='backPreview' && backPreviewUrl) URL.revokeObjectURL(backPreviewUrl);
+  const u=URL.createObjectURL(f); if(imgId==='frontPreview') frontPreviewUrl=u; else backPreviewUrl=u;
+  img.src=u; img.classList.remove('hide'); img.onload=()=>{st.textContent='✅ Selected preview';}; img.onerror=()=>{st.textContent='⚠️ Preview load नहीं हुआ';};
+}
+$('panfile').onchange=async()=>{
+  const f=$('panfile').files[0]; if(!f)return;
+  if(!f.type.startsWith('image/')){alert('PAN/Identity Card के लिए JPG/PNG photo चुनें');$('panfile').value='';return;}
+  $('panStatus').textContent='📑 Document Scanner Editor खुल रहा है...';
+  editorTarget='main';
+  openCrop(f,'main');
+};
+$('front').onchange=()=>{const f=$('front').files[0];showIdPreview($('front'),'frontPreview','frontStatus');if(f)openCrop(f,'front');};
+$('back').onchange=()=>{const f=$('back').files[0];showIdPreview($('back'),'backPreview','backStatus');if(f)openCrop(f,'back');};
+let croppedFront=null,croppedBack=null;
+// For ID photos, use the same crop modal and store the cropped result locally before creating the final layout.
+$('makeid').onclick=async()=>{try{if(!croppedFront||!croppedBack)throw Error('पहले Front और Back दोनों photo select करके Crop & Add करें');const get=async x=>{const r=await fetch(x.url);const b=await r.blob();return b};const fd=new FormData();fd.append('front',await get(croppedFront),'front.jpg');fd.append('back',await get(croppedBack),'back.jpg');const r=await fetch('/api/id-layout',{method:'POST',body:fd});const x=await r.json();if(x.error)throw Error(x.error);uploaded=[x];$('idprev').src=x.url;$('idprev').classList.remove('hide');await showResultPreview(x);alert('ID Front + Back A4 पर Actual Aadhaar Size में तैयार है — Print में 100% / Actual Size रखें');}catch(e){alert(e.message)}};
+$('submit').onclick=async()=>{try{if(!uploaded.length){const t=$('type').value;if(t==='id'){if(!(croppedFront&&croppedBack))throw Error('Aadhaar/ID के लिए Front और Back दोनों तैयार करें।');}else{const ready=await ensureSelectedFilesReady();if(!ready)throw Error('पहले Photo/PDF file चुनें।');}}const ok=confirm('Final Print से पहले कृपया सब settings check करें\n\nPage Size: '+$('paper').value+'\nCopies: '+$('copies').value+'\nColor: '+$('mode').value+'\nSides: '+$('sides').value+'\nPayment: '+$('pay').value+'\n\nReview में crop की हुई photo सही दिख रही है?\nOK = सही है, order भेजें\nCancel = वापस जाकर बदलें');if(!ok)return;const body={name:$('name').value,phone:$('phone').value,type:$('type').value,files:uploaded.map(f=>({path:f.path,url:f.url,name:f.name,mime:f.mime,filter:f.filter||'normal'})),mode:$('mode').value,copies:$('copies').value,paper:$('paper').value,sides:$('sides').value,paymentMode:$('pay').value,price:$('price').value};const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const o=await r.json();if(o.error)throw Error(o.error);$('msg').innerHTML='<b>Order #'+o.id+' भेज दिया गया है। दुकान से approval का इंतजार करें.</b>';uploaded=[];editorQueue=[];croppedFront=null;croppedBack=null;editorFile=null;editorTarget='main';wizardSelectedFiles=[];renderFiles();showSelectedPreview(null);$('files').value='';$('front').value='';$('back').value='';$('panfile').value='';$('filelist').textContent='';$('frontStatus').textContent='';$('backStatus').textContent='';$('panStatus').textContent='';$('frontPreview').classList.add('hide');$('frontPreview').removeAttribute('src');$('backPreview').classList.add('hide');$('backPreview').removeAttribute('src');$('panPreview').classList.add('hide');$('panPreview').removeAttribute('src');$('idprev').classList.add('hide');$('idprev').removeAttribute('src');if(window.showWizardStep)window.showWizardStep(1);$('msg').scrollIntoView({behavior:'smooth',block:'start'});}catch(e){alert(e.message)}};
+
+// Wizard file-preparation helper. It accepts a selected file immediately and, when possible,
+// preserves any Scanner Editor/crop work already in progress.
+async function ensureSelectedFilesReady(){
+  // IMPORTANT: the browser file input can become empty/replace its FileList while
+  // the Scanner Editor is working. Keep our own selected-file cache so Next never
+  // incorrectly says "पहले file चुनें" after a file was already selected.
+  if(uploaded.length) return true;
+  const input=$('files');
+  const chosen=Array.from(input?.files||[]);
+  const cached=(wizardSelectedFiles&&wizardSelectedFiles.length)?wizardSelectedFiles.slice():chosen;
+  if(!cached.length && !editorFile && !editorQueue.length && !cropFile) return false;
+  try{
+    // Finish every currently open Scanner Editor/crop before moving to Step 2.
+    // Saving an editor can automatically open the next queued file, so keep looping.
+    let guard=0;
+    while(guard++<30){
+      const editorOpen=!$('docEditor')?.classList.contains('hide');
+      if(editorOpen && editorFile && typeof window.__saveEditorAndContinue==='function'){
+        const ok=await window.__saveEditorAndContinue();
+        if(!ok) return false;
+        continue;
+      }
+      const cropOpen=!$('cropModal')?.classList.contains('hide');
+      if(cropOpen && cropFile){
+        const blob=await perspectiveCrop();
+        const f=new File([blob],'cropped-4corner-'+Date.now()+'.jpg',{type:'image/jpeg'});
+        $('cropModal').classList.add('hide');
+        openDocumentEditor(f,editorTarget||'main');
+        continue;
+      }
+      break;
+    }
+    if(uploaded.length) return true;
+
+    // If the editor did not produce an uploaded result, upload the cached selection
+    // directly. This covers normal documents/PDFs and any browser FileList edge case.
+    const filesToPrepare=(wizardSelectedFiles&&wizardSelectedFiles.length)?wizardSelectedFiles.slice():cached;
+    if(!filesToPrepare.length) return false;
+    const t=$('type')?.value||'document';
+    if(t==='passport' || t==='pan'){
+      for(const f of filesToPrepare){
+        await finalizeUploadedFile(f,{filter:'normal',target:'main'});
+        if(uploaded.length) break;
+      }
+    }else{
+      const xs=await uploadFiles(filesToPrepare);
+      xs.forEach(x=>{x.filter=x.filter||'normal';uploaded.push(x)});
+      renderFiles();
+      if(uploaded[0]) await showResultPreview(uploaded[0]);
+    }
+    return uploaded.length>0;
+  }catch(e){
+    alert(e.message||'File तैयार नहीं हो सकी।');
+    return false;
+  }
+}
+
+// ===== v15 PRO 6-STEP WIZARD — keeps all existing feature logic intact =====
+(function(){
+  const cards=[1,2,3,4,5,6].map(n=>document.getElementById('step'+n));
+  const progress=[...document.querySelectorAll('#wizardProgress .step')];
+  let current=1;
+  function review(){
+    const type=document.getElementById('type');
+    const typeText=type?.options[type.selectedIndex]?.text||'-';
+    const files=(document.getElementById('filelist')?.textContent||'').trim() || (document.getElementById('files')?.files?.length ? [...document.getElementById('files').files].map(f=>f.name).join(', ') : 'अभी फाइल तैयार नहीं');
+    const vals=[
+      ['📄 प्रिंट प्रकार',typeText],
+      ['📂 फाइल',files],
+      ['🎨 रंग',document.getElementById('mode')?.options[document.getElementById('mode').selectedIndex]?.text||'-'],
+      ['📑 पेपर',document.getElementById('paper')?.value||'-'],
+      ['🖨️ कॉपी',document.getElementById('copies')?.value||'-'],
+      ['↔️ प्रिंट तरीका',document.getElementById('sides')?.options[document.getElementById('sides').selectedIndex]?.text||'-'],
+      ['👤 नाम',document.getElementById('name')?.value||'—'],
+      ['📱 मोबाइल',document.getElementById('phone')?.value||'—'],
+      ['💳 भुगतान','Step 5 में भुगतान विकल्प चुना जाएगा'],
+      ['💰 अनुमानित शुल्क','₹ '+(document.getElementById('price')?.value||'0')]
+    ];
+    const box=document.getElementById('reviewBox'); if(box) box.innerHTML=vals.map(v=>`<div class="review-item"><span>${v[0]}</span><b>${v[1]}</b></div>`).join('');
+    // Show the selected Black & White / Color setting and the selected file preview on Review.
+    const photoBox=document.getElementById('reviewPhotoContent');
+    if(photoBox){
+      photoBox.innerHTML='';
+      const mode=document.getElementById('mode');
+      const modeLabel=document.createElement('div');
+      modeLabel.className='pill';
+      modeLabel.textContent=(mode?.value==='BW'?'🖤 Black & White':'🌈 Color');
+      photoBox.appendChild(modeLabel);
+      const f=uploaded?.[0];
+      const selectedMode=(mode?.value||'COLOR');
+      const reviewFilter=selectedMode==='BW'?'grayscale(1) contrast(1.08)':'none';
+      if(f?.url && f.mime?.startsWith('image/')){
+        const img=document.createElement('img'); img.src=f.url; img.alt=f.name||'Selected photo'; img.className='preview'; img.style.display='block'; img.style.width='auto'; img.style.maxWidth='72%'; img.style.maxHeight='240px'; img.style.objectFit='contain'; img.style.margin='10px auto 0'; img.style.filter=reviewFilter; photoBox.appendChild(img);
+      }else if(f?.url && (f.mime==='application/pdf'||/\.pdf$/i.test(f.name||''))){
+        const frame=document.createElement('iframe'); frame.src=f.url+'#zoom=page-fit'; frame.title='Selected PDF preview'; frame.style.cssText='display:block;width:min(100%,420px);height:280px;border:0;border-radius:8px;margin:10px auto 0;background:#fff;filter:'+reviewFilter+';'; photoBox.appendChild(frame);
+      }else{
+        const note=document.createElement('div'); note.className='small'; note.style.marginTop='8px'; note.textContent='फाइल तैयार होने के बाद उसका Preview यहाँ दिखाई देगा।'; photoBox.appendChild(note);
+      }
+    }
+  }
+  function show(n){
+    current=Math.max(1,Math.min(6,n));
+    cards.forEach((c,i)=>c?.classList.toggle('active',i+1===current));
+    progress.forEach((p,i)=>{p.classList.toggle('active',i+1===current);p.classList.toggle('done',i+1<current)});
+    if(current===4) review();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  async function canNext(n){
+    if(n===2){
+      const t=document.getElementById('type')?.value;
+      if(t==='id'){
+        const frontSelected=!!document.getElementById('front')?.files?.length;
+        const backSelected=!!document.getElementById('back')?.files?.length;
+        if(!(croppedFront&&croppedBack) && !(frontSelected&&backSelected)){
+          alert('कृपया Aadhaar/ID का Front और Back दोनों चुनें।');return false;
+        }
+      }else if(!uploaded.length){
+        const ok=await ensureSelectedFilesReady();
+        if(!ok){alert('कृपया पहले Photo/PDF file चुनें।');return false;}
+      }
+    }
+    if(n===4){
+      const name=document.getElementById('name')?.value.trim(), phone=document.getElementById('phone')?.value.trim();
+      if(!name){alert('कृपया अपना नाम दर्ज करें।');return false;}
+      if(!/^\d{10}$/.test(phone)){alert('कृपया 10 अंकों का मोबाइल नंबर दर्ज करें।');return false;}
+    }
+    return true;
+  }
+  document.querySelectorAll('.nextBtn').forEach(b=>b.addEventListener('click',async()=>{const n=Number(b.dataset.next);if(await canNext(n))show(n)}));
+  document.querySelectorAll('.backBtn').forEach(b=>b.addEventListener('click',()=>show(Number(b.dataset.back))));
+  progress.forEach((p,i)=>p.addEventListener('click',()=>{if(i+1<=current)show(i+1)}));
+  document.querySelectorAll('input,select').forEach(el=>el.addEventListener('change',()=>{if(current===4)review()}));
+  const pay=document.getElementById('pay');
+  document.querySelectorAll('input[name="payChoice"]').forEach(r=>r.addEventListener('change',()=>{if(pay)pay.value=r.value}));
+  pay?.addEventListener('change',()=>{const r=document.querySelector(`input[name="payChoice"][value="${pay.value}"]`);if(r)r.checked=true});
+  // Keep the existing form/submit logic untouched; wizard only controls visibility.
+  window.showWizardStep=show;
+  show(1);
+})();
+</script>
+</body></html>

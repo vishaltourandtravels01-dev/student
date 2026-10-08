@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QR Se Print Admin</title>
+<style>
+body{font-family:Arial;background:#eef2f5;margin:0}.wrap{max-width:1100px;margin:auto;padding:18px}
+.top{display:flex;gap:10px;flex-wrap:wrap}.stat{background:#fff;padding:14px;border-radius:12px;flex:1;min-width:160px}
+.order{background:#fff;padding:15px;border-radius:12px;margin:12px 0;border-left:6px solid #f0ad00}.order.printed{border-left-color:#198754}.order.rej{border-left-color:#dc3545}
+.btn{padding:10px;border:0;border-radius:8px;color:#fff;font-weight:700;cursor:pointer;margin:4px 3px 0 0}.ok{background:#198754}.no{background:#dc3545}.view{background:#0d6efd}.dark{background:#343a40}
+.controls{background:#f6f9fc;border:1px solid #d9e2ef;border-radius:12px;padding:12px;margin:12px 0}.controls label{font-weight:700;margin-right:8px}.controls select{padding:9px;border:1px solid #cbd6e5;border-radius:8px;background:#fff}
+.warn{background:#fff3cd;border:1px solid #f0c36d;border-radius:10px;padding:10px;margin:10px 0;font-weight:700}.wait{background:#e8f5e9;border-color:#8bc34a}
+.files{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}.files .filecard{width:min(520px,100%);background:#f8fafc;border:1px solid #d9e2ef;border-radius:12px;padding:10px}
+.files .filelabel{font-weight:700;margin-bottom:7px}.files img{display:block;width:auto;max-width:100%;max-height:520px;margin:0 auto;border:1px solid #bbb;border-radius:6px;background:#fff}
+.files .a4preview{display:block;width:auto;max-width:100%;max-height:520px;margin:0 auto;border:1px solid #bbb;border-radius:6px;background:#fff;object-fit:contain}.paperpreview{position:relative;width:min(100%,500px);margin:8px auto;background:#fff;border:1px solid #aeb8c4;overflow:hidden;box-shadow:0 2px 8px #0001}.paperpreview.a4{aspect-ratio:210/297}.paperpreview.p46{aspect-ratio:4/6}.paperpreview img{position:absolute;left:0;top:0;display:block;width:100%;height:100%;object-fit:contain;object-position:center top;max-width:none;max-height:none}.papercaption{text-align:center;font-size:12px;color:#555;margin-top:5px}
+.files a{display:block;margin:5px}.small{font-size:13px;color:#555}.filter-note{display:inline-block;margin-left:6px;padding:3px 7px;border-radius:999px;background:#e8eefc;color:#153e75;font-size:11px;font-weight:700}
+
+/* ===== FINAL30 v15 ADMIN UI ONLY — styling layer; functionality untouched ===== */
+:root{
+  --a-bg:#f4f6fb;--a-ink:#18213d;--a-muted:#6d7890;--a-primary:#5b5ff0;
+  --a-violet:#7c4dff;--a-cyan:#19b9cc;--a-green:#16a36a;--a-red:#e04468
+}
+body{
+  color:var(--a-ink)!important;
+  background:
+    radial-gradient(circle at 4% 0%,rgba(124,77,255,.13),transparent 25%),
+    radial-gradient(circle at 96% 5%,rgba(25,185,204,.12),transparent 24%),
+    linear-gradient(135deg,#f6f7fc,#eef2fb 55%,#f8faff)!important
+}
+.wrap{max-width:1160px;padding:20px}
+.wrap>h1{
+  margin:0 0 18px;padding:22px 24px;border-radius:22px;color:#fff;
+  background:linear-gradient(110deg,#121b4d,#5147d9 52%,#12a9bf);
+  box-shadow:0 16px 36px rgba(38,47,120,.2);
+  letter-spacing:-.4px
+}
+.top{gap:14px}
+.stat{
+  position:relative;overflow:hidden;min-height:78px;padding:17px 18px!important;
+  border:1px solid rgba(91,95,240,.13);border-radius:18px!important;
+  background:rgba(255,255,255,.95)!important;
+  box-shadow:0 10px 28px rgba(38,47,110,.08)!important;
+  font-size:14px;color:#68738a
+}
+.stat:after{
+  content:"";position:absolute;right:-22px;top:-22px;width:80px;height:80px;
+  border-radius:50%;background:linear-gradient(135deg,rgba(124,77,255,.15),rgba(25,185,204,.04))
+}
+.stat b{display:inline-block;margin-top:5px;color:#17204a;font-size:25px}
+.order{
+  position:relative;padding:18px!important;margin:15px 0!important;
+  border-left:5px solid #ffb52e!important;border-radius:18px!important;
+  border-top:1px solid #e3e7f1;border-right:1px solid #e3e7f1;border-bottom:1px solid #e3e7f1;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 12px 30px rgba(35,45,100,.08)!important
+}
+.order.printed{border-left-color:#18a66d!important}
+.order.rej{border-left-color:#e04468!important}
+.controls{
+  background:linear-gradient(145deg,#f8f9ff,#f1faff)!important;
+  border:1px solid #dfe4f1!important;border-radius:16px!important;
+  box-shadow:inset 0 1px 0 #fff,0 6px 18px rgba(40,50,100,.04)
+}
+.controls select{border-color:#d5dced!important;border-radius:11px!important}
+.btn{
+  border-radius:11px!important;padding:10px 13px!important;
+  box-shadow:0 6px 14px rgba(35,45,100,.12);transition:transform .15s,box-shadow .15s
+}
+.btn:hover{transform:translateY(-1px);box-shadow:0 9px 18px rgba(35,45,100,.16)}
+.ok{background:linear-gradient(135deg,#109862,#22b97d)!important}
+.no{background:linear-gradient(135deg,#dc3c61,#f05a79)!important}
+.view{background:linear-gradient(135deg,#4b55e8,#7652ed)!important}
+.dark{background:linear-gradient(135deg,#202a49,#3b4667)!important}
+.warn{border-radius:13px!important;box-shadow:0 6px 15px rgba(120,95,25,.06)}
+.files .filecard{
+  border:1px solid #e0e5f0!important;border-radius:16px!important;
+  background:linear-gradient(145deg,#fbfcff,#f4f7ff)!important;
+  box-shadow:0 8px 22px rgba(40,50,100,.06)!important
+}
+.files img,.files .a4preview{border-color:#d8deea!important;border-radius:10px!important}
+.paperpreview{border-color:#d5dbe7!important;border-radius:10px!important;box-shadow:0 8px 22px rgba(30,40,80,.12)!important}
+.filter-note{background:#eef0ff!important;color:#5146c8!important}
+.small{color:#707b91!important}
+.files a{color:#4d50d8}
+@media(max-width:700px){
+  .wrap{padding:10px}.wrap>h1{padding:18px;border-radius:18px;font-size:24px}
+  .stat{min-width:calc(50% - 7px)}
+}
+
+</style></head><body><div class="wrap"><h1>🔔 QR Se Print — Approval Panel</h1>
+<div class="top"><div class="stat">📥 Orders<br><b id="orders">0</b></div><div class="stat">⏳ Pending<br><b id="pending">0</b></div><div class="stat">🖨️ Printed<br><b id="printed">0</b></div><div class="stat">💰 Sales<br>₹<b id="sales">0</b></div></div>
+<div id="list"></div></div>
+<audio id="beep"><source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=" type="audio/wav"></audio>
+<script>
+let lastPending=0, loading=false;
+const $=x=>document.getElementById(x);
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function controls(o){
+  const multi=!!(o.pageCount && o.pageCount>1);
+  const mode=o.printMode||'ONE_BY_ONE', out=o.outputMode||'DIRECT_PRINT', colorMode=o.mode||'COLOR';
+  const current=Math.min((o.currentPage||0)+1,o.pageCount||1);
+  return `<div class="controls">
+    ${multi?`<div><b>⚙️ Multi-page Print Setting</b></div>
+    <div style="margin-top:8px">
+      <label>Print Mode:</label>
+      <select id="pm-${o.id}" onchange="saveSetting('${o.id}')">
+        <option value="ONE_BY_ONE" ${mode==='ONE_BY_ONE'?'selected':''}>🔐 One-by-One (हर page पर approval)</option>
+        <option value="ALL" ${mode==='ALL'?'selected':''}>🖨️ All Pages (एक approval में सभी)</option>
+      </select>
+    </div>`:''}
+    <div style="margin-top:8px">
+      <label>Color / Black &amp; White:</label>
+      <select id="cm-${o.id}" onchange="saveSetting('${o.id}')">
+        <option value="COLOR" ${colorMode==='COLOR'?'selected':''}>🌈 Color — Color में ही Preview/Print</option>
+        <option value="BW" ${colorMode==='BW'?'selected':''}>🖤 Black &amp; White — B&amp;W में ही Preview/Print</option>
+      </select>
+    </div>
+    ${multi?`<div style="margin-top:8px">
+      <label>Approval के बाद:</label>
+      <select id="om-${o.id}" onchange="saveSetting('${o.id}')">
+        <option value="DIRECT_PRINT" ${out==='DIRECT_PRINT'?'selected':''}>🖨️ Direct Print</option>
+        <option value="DOWNLOAD" ${out==='DOWNLOAD'?'selected':''}>💾 Download / Save</option>
+      </select>
+    </div>
+    ${mode==='ONE_BY_ONE'?`<div class="small" style="margin-top:8px">अगला page: <b>${current}/${o.pageCount}</b>${o.sides==='DUPLEX'&&current>1?' — 🔄 Paper बदलें/पलटें':''}</div>`:`<div class="small" style="margin-top:8px">इस approval के बाद सभी ${o.pageCount} pages automatic चलेंगे।</div>`}`:''}
+    ${o.type==='passport'?`<div class="small" style="margin-top:8px">📸 Passport Photo: केवल Color mode उपलब्ध है।</div>`:''}
+  </div>`;
+}
+async function saveSetting(id){
+  const pm=$('pm-'+id)?.value, om=$('om-'+id)?.value, cm=$('cm-'+id)?.value;
+  if(!pm&&!om&&!cm)return;
+  const r=await fetch('/api/orders/'+id+'/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({printMode:pm,outputMode:om,colorMode:cm})});
+  const x=await r.json(); if(x.error)alert(x.error); await load();
+}
+function action(o){
+  if(o.status==='PENDING'||o.status==='WAITING_NEXT'){
+    const label=o.pageCount>1
+      ? (o.printMode==='ALL'?'✅ APPROVE ALL + START':'✅ APPROVE NEXT PAGE')
+      : '✅ APPROVE + PRINT';
+    return `<button class="btn ok" onclick="approve('${o.id}')">${label}</button>
+      <button class="btn no" onclick="reject('${o.id}')">❌ REJECT</button>
+      <button class="btn dark" onclick="deleteOrder('${o.id}')">🗑️ DELETE DATA</button>`;
+  }
+  if(o.status==='READY_DOWNLOAD'){
+    return `<a class="btn view" href="/api/orders/${o.id}/download" target="_blank">💾 DOWNLOAD / SAVE</a>`;
+  }
+  if(o.status==='APPROVED') return `<button class="btn ok" onclick="print('${o.id}')">🖨️ PRINT NOW</button>`;
+  if(o.status==='REJECTED'||o.status==='PRINTED'||o.status==='PRINT_ERROR') return `<button class="btn dark" onclick="deleteOrder('${o.id}')">🗑️ DELETE DATA</button>`;
+  return '';
+}
+function paperClass(p){return String(p||'A4').toUpperCase()==='A4'?'a4':'p46';}
+function paperLabel(p){return String(p||'A4').toUpperCase()==='A4'?'A4':'4×6';}
+const filterDefs={normal:'none',soft:'brightness(1.04) contrast(.96) saturate(.9)',sharp:'contrast(1.35) brightness(.98) saturate(.75)',bw:'grayscale(1) contrast(1.18)',carbon:'grayscale(1) contrast(1.65) brightness(.9)',gray:'grayscale(1)'};
+function filterLabel(v){return ({normal:'Original',soft:'Soft Tone',sharp:'Sharp Black',bw:'B&W',carbon:'Carbon Black',gray:'Grayscale'})[v||'normal']||'Original';}
+function imagePreview(f,o){
+  const pc=paperClass(o.paper); const mode=String(o.mode||'COLOR').toUpperCase()==='BW'?'BW':'COLOR'; const vf=mode==='BW'?'grayscale(1) contrast(1.08)':'none';
+  return `<div class="filecard"><div class="filelabel">🖼️ ${esc(f.name)} — ${esc(paperLabel(o.paper))} Paper Preview <span class="filter-note">${mode==='BW'?'🖤 Black &amp; White':'🌈 Color'}</span></div><div class="paperpreview ${pc}"><img src="${f.url}?preview=${Date.now()}" alt="${esc(f.name)}" style="filter:${vf}"></div><div class="papercaption">📄 ${esc(paperLabel(o.paper))} page • ऊपर से सिर्फ 2 mm • ${mode==='BW'?'B&amp;W':'Color'} Preview — यही mode print में जाएगा</div>${String(f.name||'').toLowerCase().includes('aadhaar-front-back-a4')?`<div class="small" style="margin-top:8px">🪪 Aadhaar card का actual physical size 85.60 × 53.98 mm रखा गया है।</div>`:''}</div>`;
+}
+async function load(){
+  if(loading)return; loading=true;
+  try{
+    const [r,s]=await Promise.all([fetch('/api/orders',{cache:'no-store'}),fetch('/api/stats',{cache:'no-store'})]);
+    const os=await r.json(),st=await s.json();
+    $('orders').textContent=st.orders;$('pending').textContent=st.pending;$('printed').textContent=st.printed;$('sales').textContent=st.sales;
+    if(st.pending>lastPending){try{$('beep').play()}catch{}} lastPending=st.pending;
+    $('list').innerHTML=os.slice(0,30).map(o=>{
+      const multi=o.pageCount>1;
+      const statusText=o.status==='WAITING_NEXT'?'WAITING FOR NEXT APPROVAL':o.status;
+      return `<div class="order ${o.status==='PRINTED'?'printed':o.status==='REJECTED'?'rej':''}">
+        <h2>#${esc(o.id)} — ${esc(statusText)}</h2>
+        <div>👤 ${esc(o.name)} ${o.phone?'📱 '+esc(o.phone):''}</div>
+        <div>🖨️ ${esc(o.mode)} | ${o.copies} copies | ${esc(o.paper)} | ${esc(o.sides)} | ₹${esc(o.price)}</div>
+        ${multi?`<div class="warn">⚠️ इस PDF में <b>${o.pageCount} pages</b> हैं। Admin से Print Mode चुनें।</div>`:''}
+        ${o.sides==='DUPLEX'&&multi&&o.status==='WAITING_NEXT'?`<div class="warn wait">🔄 Front/previous side print हो चुका है। Paper बदलें/पलटें और फिर अगली approval दें।</div>`:''}
+        <div style="margin-top:7px;font-weight:800">🎨 Print Color: <span class="filter-note">${o.type==='passport'||o.mode!=='BW'?'🌈 Color':'🖤 Black &amp; White'}</span></div>
+        <div style="margin-top:7px;font-weight:800">💳 Payment: <span style="display:inline-block;padding:4px 9px;border-radius:999px;background:${o.paymentMode==='ONLINE'?'#d1fae5':o.paymentMode==='CASH'?'#fef3c7':'#e5e7eb'};color:${o.paymentMode==='ONLINE'?'#065f46':o.paymentMode==='CASH'?'#92400e':'#374151'}">${o.paymentMode==='ONLINE'?'ONLINE':o.paymentMode==='CASH'?'CASH':esc(o.paymentMode||'NOT SET')}</span></div>
+        ${controls(o)}
+        <div class="files">${(o.files||[]).map(f=>f.mime&&f.mime.startsWith('image/')?imagePreview(f,o):
+          `<div class="filecard"><div class="filelabel">📄 ${esc(f.name)} — ${esc(paperLabel(o.paper))} PDF <span class="filter-note">🎨 ${esc(filterLabel(f.filter))}</span></div><div class="paperpreview ${paperClass(o.paper)}"><iframe src="${f.url}#zoom=page-fit" style="position:absolute;left:0;top:0;width:100%;height:100%;border:0;background:#fff;filter:${String(o.mode||'COLOR').toUpperCase()==='BW'?'grayscale(1) contrast(1.08)':'none'}"></iframe></div><div class="papercaption">📄 ${esc(paperLabel(o.paper))} page • ऊपर से सिर्फ 2 mm • ${String(o.mode||'COLOR').toUpperCase()==='BW'?'B&amp;W':'Color'} Preview — यही mode print में जाएगा</div><a href="${f.url}" target="_blank">Open PDF</a><button class="btn view" onclick="openAdobe(${JSON.stringify(f.path||'')})">📄 Adobe में खोलें</button></div>`).join('')}</div>
+        ${action(o)}
+      </div>`;
+    }).join('');
+  }finally{loading=false}
+}
+async function openAdobe(p){const r=await fetch('/api/open-pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path:p})});const x=await r.json();if(x.error)alert(x.error)}
+async function approve(id){
+  const pm=$('pm-'+id)?.value, om=$('om-'+id)?.value;
+  const r=await fetch('/api/orders/'+id+'/approve-print',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({printMode:pm,outputMode:om})});
+  const x=await r.json();
+  if(x.error){alert(x.error);return}
+  if(x.downloadUrl){window.open(x.downloadUrl,'_blank');}
+  await load();
+}
+async function print(id){const r=await fetch('/api/orders/'+id+'/print',{method:'POST'});const x=await r.json();if(x.error)alert(x.error);await load()}
+async function reject(id){const reason=prompt('Reject reason:')||'';await fetch('/api/orders/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reason})});await load()}
+async function deleteOrder(id){if(!confirm('⚠️ Is order ka customer data, uploaded files aur order record permanently delete karna hai?'))return;const r=await fetch('/api/orders/'+id+'/delete',{method:'POST'});const x=await r.json();if(x.error)alert(x.error);else alert('✅ Customer data permanently delete ho gaya.');await load()}
+load();
+</script></body></html>
